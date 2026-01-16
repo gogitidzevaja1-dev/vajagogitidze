@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Architecture Proposal | Plancraft</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --plancraft-green: #00C896;
+            --plancraft-green-dark: #00A67A;
+            --plancraft-green-light: #E6FBF5;
+            --plancraft-green-subtle: #F0FDF9;
+            --dark: #1A1A2E;
+            --dark-secondary: #2D2D44;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F7;
+            --gray-200: #E8E8ED;
+            --gray-400: #9999A8;
+            --gray-600: #666677;
+            --gray-800: #333344;
+            --white: #FFFFFF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--gray-50); color: var(--dark); line-height: 1.7; font-size: 15px; }
+        .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1; }
+        .page.active { opacity: 1; visibility: visible; z-index: 10; }
+        .welcome-page { background: linear-gradient(145deg, var(--dark) 0%, #252542 50%, var(--dark-secondary) 100%); display: flex; align-items: center; justify-content: center; }
+        .welcome-content { text-align: center; z-index: 1; max-width: 720px; padding: 2rem; }
+        .welcome-badge { display: inline-block; background: rgba(0, 200, 150, 0.12); border: 1px solid rgba(0, 200, 150, 0.25); color: var(--plancraft-green); padding: 0.5rem 1.25rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.75px; margin-bottom: 2rem; text-transform: uppercase; }
+        .welcome-title { font-size: 3rem; font-weight: 800; color: var(--white); margin-bottom: 1rem; letter-spacing: -1.5px; line-height: 1.1; }
+        .welcome-title span { background: linear-gradient(135deg, var(--plancraft-green) 0%, #00E5A0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .welcome-subtitle { font-size: 1.15rem; color: var(--gray-400); margin-bottom: 2rem; }
+        .welcome-team-img { max-width: 100%; height: auto; margin-bottom: 2rem; border-radius: 16px; opacity: 0.95; }
+        .welcome-thank-you { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 1.5rem 2rem; margin-bottom: 2rem; color: var(--gray-400); font-size: 0.95rem; }
+        .welcome-thank-you strong { color: var(--white); }
+        .btn-start { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--plancraft-green); color: var(--dark); padding: 1rem 2.25rem; border-radius: 50px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; box-shadow: 0 8px 32px rgba(0, 200, 150, 0.3); transition: all 0.3s ease; }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0, 200, 150, 0.4); }
+        .hub-page { background: var(--gray-50); }
+        .hub-header { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .hub-header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .hub-logo { font-size: 1.1rem; font-weight: 700; color: var(--dark); }
+        .hub-logo span { color: var(--plancraft-green); }
+        .hub-nav-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--gray-200); border-radius: 8px; background: var(--white); color: var(--gray-600); font-size: 0.85rem; font-weight: 500; cursor: pointer; }
+        .hub-container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+        .exec-section { background: var(--white); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        .exec-section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--dark); }
+        .exec-highlight { background: linear-gradient(135deg, var(--plancraft-green-subtle) 0%, var(--plancraft-green-light) 100%); border-left: 4px solid var(--plancraft-green); padding: 1.25rem 1.5rem; border-radius: 0 12px 12px 0; margin-bottom: 1.5rem; }
+        .exec-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-box { text-align: center; padding: 1.5rem 1rem; background: var(--gray-100); border-radius: 12px; }
+        .stat-value { font-size: 2.25rem; font-weight: 800; color: var(--plancraft-green); line-height: 1; }
+        .stat-label { font-size: 0.8rem; color: var(--gray-600); font-weight: 500; margin-top: 0.5rem; }
+        .assumptions-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: var(--dark); }
+        .assumptions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .assumption-box { padding: 1.25rem; border-radius: 12px; }
+        .assumption-box.made { background: linear-gradient(135deg, var(--plancraft-green-subtle) 0%, var(--plancraft-green-light) 100%); border: 1px solid rgba(0, 200, 150, 0.15); }
+        .assumption-box.validate { background: linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%); border: 1px solid rgba(13, 148, 136, 0.15); }
+        .assumption-box h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .assumption-box.made h4 { color: var(--plancraft-green-dark); }
+        .assumption-box.validate h4 { color: #0D9488; }
+        .assumption-box ul { margin: 0; padding-left: 1.25rem; font-size: 0.85rem; }
+        .assumption-box.made li { color: var(--plancraft-green-dark); margin-bottom: 0.35rem; }
+        .assumption-box.validate li { color: #0F766E; margin-bottom: 0.35rem; }
+        .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        .task-card { background: var(--white); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; border: 1px solid var(--gray-200); position: relative; overflow: hidden; }
+        .task-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); border-color: var(--plancraft-green); }
+        .task-card-number { display: inline-block; background: var(--plancraft-green-light); color: var(--plancraft-green-dark); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem; }
+        .task-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; }
+        .task-card p { font-size: 0.9rem; color: var(--gray-600); margin: 0; }
+        .detail-page { background: var(--gray-50); }
+        .detail-header { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .detail-header-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .detail-back { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--gray-200); border-radius: 8px; background: var(--white); color: var(--gray-600); font-size: 0.85rem; cursor: pointer; }
+        .detail-nav { display: flex; gap: 0.5rem; }
+        .detail-nav button { width: 36px; height: 36px; border: 1px solid var(--gray-200); border-radius: 8px; background: var(--white); color: var(--gray-600); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .detail-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .detail-container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        .detail-content { background: var(--white); border-radius: 16px; padding: 2.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        .detail-badge { display: inline-block; background: var(--plancraft-green-light); color: var(--plancraft-green-dark); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+        .detail-title { font-size: 2rem; font-weight: 800; color: var(--dark); margin-bottom: 0.75rem; letter-spacing: -0.5px; }
+        .detail-subtitle { font-size: 1.05rem; color: var(--gray-600); margin-bottom: 2rem; }
+        .section-assumptions { background: linear-gradient(135deg, var(--plancraft-green-subtle) 0%, var(--plancraft-green-light) 100%); border: 1px solid rgba(0, 200, 150, 0.15); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+        .section-assumptions h4 { color: var(--plancraft-green-dark); font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+        .section-assumptions ul { margin: 0; padding-left: 1.25rem; font-size: 0.85rem; color: var(--plancraft-green-dark); }
+        .section-assumptions li { margin-bottom: 0.35rem; }
+        .content-section { margin-bottom: 2.5rem; }
+        .content-section h3 { font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--plancraft-green); display: inline-block; }
+        .content-section h4 { font-size: 1rem; font-weight: 600; color: var(--dark-secondary); margin: 1.25rem 0 0.75rem; }
+        .content-section p { margin-bottom: 1rem; color: var(--gray-600); }
+        .content-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+        .content-table th { background: var(--dark); color: var(--white); padding: 0.85rem 1rem; text-align: left; font-weight: 600; }
+        .content-table th:first-child { border-radius: 8px 0 0 0; }
+        .content-table th:last-child { border-radius: 0 8px 0 0; }
+        .content-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--gray-200); color: var(--gray-600); vertical-align: top; }
+        code { background: var(--gray-100); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.85em; }
+        .code-dark { background: var(--dark); color: #00FF88; padding: 0.2rem 0.5rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; }
+        .diagram-box { background: var(--dark); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; font-family: monospace; font-size: 0.75rem; color: var(--gray-400); overflow-x: auto; }
+        .diagram-box pre { margin: 0; line-height: 1.5; }
+        .insight-box { background: var(--dark); color: var(--white); padding: 1.25rem 1.5rem; border-radius: 12px; margin: 1.5rem 0; font-size: 0.95rem; }
+        .insight-box strong { color: var(--plancraft-green); }
+        .journey-box { background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .journey-box h4 { color: #4338CA; margin: 0 0 1rem 0; font-size: 1rem; }
+        .counter-box { background: linear-gradient(135deg, #FDF4FF 0%, #FAE8FF 100%); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .counter-box h4 { color: #7C3AED; margin: 0 0 1rem 0; }
+        .counter-box p, .counter-box li { color: #6B21A8; font-size: 0.9rem; }
+        .counter-rebuttal { background: var(--dark); color: var(--white); padding: 1rem 1.25rem; border-radius: 8px; margin-top: 1rem; }
+        .counter-rebuttal h5 { color: var(--plancraft-green); margin: 0 0 0.5rem 0; font-size: 0.9rem; }
+        .counter-rebuttal p { color: var(--gray-400); margin: 0; font-size: 0.85rem; }
+        .global-local-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+        .global-col { background: linear-gradient(135deg, var(--plancraft-green-subtle) 0%, var(--plancraft-green-light) 100%); padding: 1.25rem; border-radius: 12px; }
+        .global-col h4 { color: var(--plancraft-green-dark); margin: 0 0 0.75rem 0; font-size: 0.9rem; }
+        .global-col li { color: var(--plancraft-green-dark); font-size: 0.85rem; }
+        .local-col { background: linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%); padding: 1.25rem; border-radius: 12px; }
+        .local-col h4 { color: #0D9488; margin: 0 0 0.75rem 0; font-size: 0.9rem; }
+        .local-col li { color: #0F766E; font-size: 0.85rem; }
+        .automation-box { background: linear-gradient(135deg, var(--plancraft-green-subtle) 0%, var(--plancraft-green-light) 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-top: 4px solid var(--plancraft-green); }
+        .automation-box h4 { color: var(--plancraft-green-dark); margin: 0 0 1rem 0; }
+        .safeguard-box { background: #D1FAE5; border-left: 4px solid var(--plancraft-green); padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+        .safeguard-box h5 { color: #065F46; font-weight: 600; margin: 0 0 0.5rem 0; font-size: 0.85rem; }
+        .safeguard-box ul { margin: 0; padding-left: 1.25rem; color: #047857; font-size: 0.85rem; }
+        .hub-footer { text-align: center; padding: 2rem; color: var(--gray-400); font-size: 0.85rem; }
+        @media (max-width: 768px) { .exec-stats, .assumptions-grid, .cards-grid, .global-local-grid { grid-template-columns: 1fr; } .welcome-title { font-size: 2.25rem; } }
+    </style>
+</head>
+<body>
+    <div class="page welcome-page active" id="welcome">
+        <div class="welcome-content">
+            <div class="welcome-badge">Senior CRM Manager Challenge</div>
+            <h1 class="welcome-title">Scalable CRM Architecture<br>for <span>Plancraft</span></h1>
+            <p class="welcome-subtitle">Global consistency with local flexibility — designed for multi-market expansion</p>
+            <img src="https://plancraft.de/hubfs/New%20Sales%20Page/Team%20Sales.webp" alt="Plancraft Team" class="welcome-team-img" onerror="this.style.display='none'">
+            <div class="welcome-thank-you">
+                <strong>Thank you for your time.</strong><br>
+                I've designed this architecture with Plancraft's unique context in mind: a high-volume, PLG-led motion serving tradespeople across Europe. The core philosophy is <strong>"less office, more craft"</strong> — applied to CRM operations.
+            </div>
+            <button class="btn-start" onclick="showPage('hub')">View Proposal →</button>
+            <p style="margin-top: 2rem; color: var(--gray-400); font-size: 0.85rem;">Created by <strong style="color: var(--white);">Vaja Gogitidze</strong></p>
+        </div>
+    </div>
+
+    <div class="page hub-page" id="hub">
+        <header class="hub-header">
+            <div class="hub-header-inner">
+                <div class="hub-logo">Plan<span>craft</span> Proposal</div>
+                <button class="hub-nav-btn" onclick="showPage('welcome')">← Back</button>
+            </div>
+        </header>
+        <div class="hub-container">
+            <section class="exec-section">
+                <h2>Executive Summary</h2>
+                <div class="exec-highlight">
+                    <p><strong>Core Design Philosophy:</strong> "Less office, more craft" extends to CRM operations. This architecture prioritizes simplicity, clear ownership, and governance that scales.</p>
+                </div>
+                <div class="exec-stats">
+                    <div class="stat-box"><div class="stat-value">1</div><div class="stat-label">Global Pipeline</div></div>
+                    <div class="stat-box"><div class="stat-value">0</div><div class="stat-label">Custom Objects</div></div>
+                    <div class="stat-box"><div class="stat-value">10+</div><div class="stat-label">Markets Supported</div></div>
+                </div>
+                <h3 class="assumptions-title">Global Assumptions</h3>
+                <div class="assumptions-grid">
+                    <div class="assumption-box made">
+                        <h4>✓ Assumptions Made</h4>
+                        <ul>
+                            <li>Company is the central object — Plancraft is B2B software</li>
+                            <li>One company = one subscription</li>
+                            <li>Product is source of truth for subscription data</li>
+                            <li>Stripe is source of truth for billing data</li>
+                            <li>HubSpot Enterprise tier is available</li>
+                            <li>Single pipeline currently exists</li>
+                            <li>CS/CX team handles churn prevention and upsells</li>
+                        </ul>
+                    </div>
+                    <div class="assumption-box validate">
+                        <h4>? What I'd Validate First</h4>
+                        <ul>
+                            <li>Current HubSpot state — existing properties, tech debt?</li>
+                            <li>Sales team feedback on pipeline stages</li>
+                            <li>CS team capacity for churn intervention volume</li>
+                            <li>Product team's data export capabilities</li>
+                            <li>Existing duplicate backlog severity</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--gray-600); margin-bottom: 1rem;">Detailed Architecture →</h3>
+                <div class="cards-grid">
+                    <div class="task-card" onclick="showPage('task1')">
+                        <span class="task-card-number">Task 1</span>
+                        <h3>Object Model</h3>
+                        <p>Source of truth assignments, customer journey, Deal Type property</p>
+                    </div>
+                    <div class="task-card" onclick="showPage('task2')">
+                        <span class="task-card-number">Task 2</span>
+                        <h3>Market & Localization</h3>
+                        <p>Single pipeline decision, global vs. local framework</p>
+                    </div>
+                    <div class="task-card" onclick="showPage('task3')">
+                        <span class="task-card-number">Task 3</span>
+                        <h3>Automation & AI</h3>
+                        <p>Churn Risk Alert + Expansion Opportunity — owned by CS/CX</p>
+                    </div>
+                    <div class="task-card" onclick="showPage('task4')">
+                        <span class="task-card-number">Task 4</span>
+                        <h3>Data Governance</h3>
+                        <p>Naming conventions, permission matrix, deduplication</p>
+                    </div>
+                </div>
+            </section>
+            <footer class="hub-footer">Press ESC to return to overview from any task</footer>
+        </div>
+    </div>
+
+    <div class="page detail-page" id="task1">
+        <header class="detail-header">
+            <div class="detail-header-inner">
+                <button class="detail-back" onclick="showPage('hub')">← Back to Overview</button>
+                <div class="detail-nav">
+                    <button disabled>←</button>
+                    <button onclick="showPage('task2')">→</button>
+                </div>
+            </div>
+        </header>
+        <div class="detail-container">
+            <div class="detail-content">
+                <span class="detail-badge">Task 1 of 4</span>
+                <h1 class="detail-title">Object Model — Sources of Truth</h1>
+                <p class="detail-subtitle">Simple, company-centric architecture. No custom objects. Clear system boundaries.</p>
+                
+                <div class="section-assumptions">
+                    <h4>✓ Assumptions for This Section</h4>
+                    <ul>
+                        <li>Company is the central object — even sole proprietors purchase Plancraft for their business</li>
+                        <li>One company = one subscription — a company buys one plan (Business/Pro/Premium) and adds licenses for team members</li>
+                        <li>Product database is source of truth for subscription data</li>
+                        <li>Stripe is source of truth for billing data (MRR, payment status)</li>
+                        <li>Self-serve upgrades happen in-app without sales — no Deal created</li>
+                        <li>Sales-assisted conversions and expansions create Deals</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>Which HubSpot Objects Are Sources of Truth?</h3>
+                    <table class="content-table">
+                        <thead><tr><th>Object</th><th>Source of Truth For</th><th>Why?</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Contact</strong></td><td>Person's identity, email, phone, individual usage</td><td>HubSpot is where we communicate</td></tr>
+                            <tr><td><strong>Company</strong></td><td>Business identity, subscription status, aggregated usage</td><td>Central node — everything connects here</td></tr>
+                            <tr><td><strong>Deal</strong></td><td>Sales opportunities (new business, expansion)</td><td>Revenue opportunities needing sales</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <h3>Why No Custom Objects?</h3>
+                    <p>Plancraft's pricing has 3 plans (Business / Pro / Premium), variable licenses (office + mobile), and optional add-ons (Planning board). This could justify a custom Subscription object. But it doesn't.</p>
+                    <table class="content-table">
+                        <thead><tr><th>Question</th><th>Answer</th></tr></thead>
+                        <tbody>
+                            <tr><td>Can one company have multiple subscriptions?</td><td>No — a company buys one plan and adds licenses for team members</td></tr>
+                            <tr><td>Is the pricing structure complex?</td><td>No — plan + licenses + optional add-on</td></tr>
+                            <tr><td>Do we need subscription-level history?</td><td>No — current state is what matters for Sales & CS</td></tr>
+                            <tr><td>Do we need to link deals to subscriptions?</td><td>No — deals lead to subscription changes, tracked via Company properties</td></tr>
+                        </tbody>
+                    </table>
+                    <p>Custom objects add complexity: they require HubSpot Enterprise, more integration work, and ongoing maintenance. For Plancraft's SMB market — where one company equals one subscription — properties on Company give us everything we need.</p>
+                    <p><strong>When we'd revisit:</strong> If Plancraft introduces multiple products, serves enterprise customers with separate subscriptions per team, or needs subscription-level audit history.</p>
+                </div>
+
+                <div class="content-section">
+                    <h3>Real Plancraft Customer Journey</h3>
+                    <div class="journey-box">
+                        <h4>Example: Müller Elektro GmbH</h4>
+                        <table class="content-table" style="margin: 0;">
+                            <thead><tr><th>Day</th><th>What Happens</th><th>Where It Lives</th><th>Data Source</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>1</strong></td><td>Electrician signs up for free trial</td><td>Contact created, Company created</td><td>Product → HubSpot</td></tr>
+                                <tr><td><strong>2-14</strong></td><td>Uses product during trial period</td><td>Usage properties on Contact (logins, quotes created)</td><td>Product → HubSpot</td></tr>
+                                <tr><td><strong>10</strong></td><td>Sales rep reaches out</td><td>Deal created: "New Business - Müller Elektro"</td><td>HubSpot (manual)</td></tr>
+                                <tr><td><strong>14</strong></td><td>Converts to Business plan (€59/mo)</td><td>Deal → Closed Won<br><code>[Global] Subscription Plan</code> on Company = Business<br><code>[Global] MRR</code> on Company = €59</td><td>Deal: HubSpot<br>Subscription: Product → HubSpot<br>MRR: Stripe → HubSpot</td></tr>
+                                <tr><td><strong>60</strong></td><td>Adds 2 team members</td><td>New Contacts created with usage tracking</td><td>Product → HubSpot</td></tr>
+                                <tr><td><strong>90</strong></td><td>Hitting feature limits</td><td>Automation creates Deal: "Expansion - Müller Elektro"<br><code>[Global] Deal Type</code> = Expansion</td><td>Product → HubSpot (trigger)<br>HubSpot (workflow)</td></tr>
+                                <tr><td><strong>100</strong></td><td>CS rep upsells to Pro</td><td>Deal → Closed Won<br><code>[Global] Subscription Plan</code> on Company = Pro<br><code>[Global] MRR</code> on Company = €109.90</td><td>Deal: HubSpot<br>Subscription: Product → HubSpot<br>MRR: Stripe → HubSpot</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>Who Owns What Data?</h3>
+                    <table class="content-table">
+                        <thead><tr><th>Data</th><th>Source of Truth</th><th>HubSpot Gets</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Subscription</strong> (plan, licenses)</td><td>Product</td><td>Properties on Company</td></tr>
+                            <tr><td><strong>Billing</strong> (MRR, payment status)</td><td>Stripe</td><td>Properties on Company</td></tr>
+                            <tr><td><strong>Individual Usage</strong></td><td>Product</td><td>Properties on Contact</td></tr>
+                            <tr><td><strong>Aggregated Usage</strong></td><td>Product → Calculated</td><td>Properties on Company</td></tr>
+                            <tr><td><strong>Support</strong> (tickets, CSAT)</td><td>Intercom</td><td>Summary on Company</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="insight-box"><strong>Simple rule:</strong> Each system owns what it's best at. HubSpot gets summaries, not raw data.</div>
+                </div>
+
+                <div class="content-section">
+                    <h3>Subscription Properties on Company</h3>
+                    <table class="content-table">
+                        <thead><tr><th>Property</th><th>Label</th><th>Type</th><th>Source</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_subscription_plan</code></td><td>[Global] Subscription Plan</td><td>Dropdown</td><td>Product</td></tr>
+                            <tr><td><code class="code-dark">g_subscription_status</code></td><td>[Global] Subscription Status</td><td>Dropdown</td><td>Product</td></tr>
+                            <tr><td><code class="code-dark">g_subscription_billing_cycle</code></td><td>[Global] Billing Cycle</td><td>Dropdown</td><td>Stripe</td></tr>
+                            <tr><td><code class="code-dark">g_subscription_office_licenses</code></td><td>[Global] Office Licenses</td><td>Number</td><td>Product</td></tr>
+                            <tr><td><code class="code-dark">g_subscription_mobile_licenses</code></td><td>[Global] Mobile Licenses</td><td>Number</td><td>Product</td></tr>
+                            <tr><td><code class="code-dark">g_subscription_mrr</code></td><td>[Global] MRR</td><td>Currency</td><td>Stripe</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Note on MRR:</strong> All normalized to monthly. Yearly subscribers: MRR = annual ÷ 12. ARR calculated in reports (MRR × 12).</p>
+                </div>
+
+                </div>
+        </div>
+    </div>
+
+    <div class="page detail-page" id="task2">
+        <header class="detail-header">
+            <div class="detail-header-inner">
+                <button class="detail-back" onclick="showPage('hub')">← Back to Overview</button>
+                <div class="detail-nav">
+                    <button onclick="showPage('task1')">←</button>
+                    <button onclick="showPage('task3')">→</button>
+                </div>
+            </div>
+        </header>
+        <div class="detail-container">
+            <div class="detail-content">
+                <span class="detail-badge">Task 2 of 4</span>
+                <h1 class="detail-title">Market & Localization Strategy</h1>
+                <p class="detail-subtitle">How country, language, and market ownership are modeled — and why one global pipeline.</p>
+                
+                <div class="section-assumptions">
+                    <h4>✓ Assumptions for This Section</h4>
+                    <ul>
+                        <li>Sales process is similar across markets (same buyer persona)</li>
+                        <li>Product is identical across all markets</li>
+                        <li>ACV is low (€60-250/mo) — no enterprise procurement</li>
+                        <li>Single pipeline currently exists and works</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>How We Model Country, Language, Market Ownership</h3>
+                    
+                    <h4>Country & Market Properties</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Property</th><th>Label</th><th>Object</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_market</code></td><td>[Global] Market</td><td>Company</td><td>Primary market identifier (DE, AT, NL, CH)</td></tr>
+                            <tr><td><code class="code-dark">g_market_region</code></td><td>[Global] Market Region</td><td>Company</td><td>Broader grouping (DACH, Benelux, Nordics)</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Why both?</strong> Market = operational (routing, VAT rules). Region = strategic (forecasting, hiring decisions).</p>
+                    
+                    <h4>Market-Specific Properties: How They Work</h4>
+                    <p>Properties are organized with prefixes to indicate scope. This prevents clutter and ensures teams only see relevant fields.</p>
+                    
+                    <table class="content-table">
+                        <thead><tr><th>Prefix</th><th>Scope</th><th>Example Property</th><th>Label Display</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_</code></td><td>All markets</td><td><code>g_subscription_plan</code></td><td>[Global] Subscription Plan</td></tr>
+                            <tr><td><code class="code-dark">m_de_</code></td><td>Germany only</td><td><code>m_de_vat_number</code></td><td>[DE] VAT Number</td></tr>
+                            <tr><td><code class="code-dark">m_at_</code></td><td>Austria only</td><td><code>m_at_uid_number</code></td><td>[AT] UID Number</td></tr>
+                            <tr><td><code class="code-dark">m_nl_</code></td><td>Netherlands only</td><td><code>m_nl_btw_number</code></td><td>[NL] BTW Number</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Real Example: VAT/Tax Identification</h4>
+                    <p>Each market has different tax ID requirements. Instead of one "Tax ID" field that means different things, we create market-specific properties:</p>
+                    
+                    <table class="content-table">
+                        <thead><tr><th>Property Name</th><th>Label</th><th>Format</th><th>When Visible</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">m_de_vat_number</code></td><td>[DE] VAT Number</td><td>DE123456789</td><td>Only when <code>[Global] Market = Germany</code></td></tr>
+                            <tr><td><code class="code-dark">m_at_uid_number</code></td><td>[AT] UID Number</td><td>ATU12345678</td><td>Only when <code>[Global] Market = Austria</code></td></tr>
+                            <tr><td><code class="code-dark">m_nl_btw_number</code></td><td>[NL] BTW Number</td><td>NL123456789B01</td><td>Only when <code>[Global] Market = Netherlands</code></td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="insight-box">
+                        <strong>Key benefit:</strong> German sales reps only see <strong>[DE] VAT Number</strong>. Dutch reps only see <strong>[NL] BTW Number</strong>. No confusion about which format to use.
+                    </div>
+                    
+                    <h4>More Market-Specific Examples</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Market Need</th><th>Property Name</th><th>Label</th></tr></thead>
+                        <tbody>
+                            <tr><td>German legal structure</td><td><code>m_de_legal_form</code></td><td>[DE] Legal Form (GmbH, AG, etc.)</td></tr>
+                            <tr><td>German trade registration</td><td><code>m_de_handelsregister</code></td><td>[DE] Handelsregister Number</td></tr>
+                            <tr><td>Dutch Chamber of Commerce</td><td><code>m_nl_kvk_number</code></td><td>[NL] KVK Number</td></tr>
+                            <tr><td>Austrian invoicing requirement</td><td><code>m_at_invoice_recipient</code></td><td>[AT] Invoice Recipient Name</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <p><strong>Conditional visibility:</strong> These properties are set to only display when <code>[Global] Market</code> matches the market prefix. This keeps the UI clean and prevents data entry errors.</p>
+                    
+                    <h4>Language Properties</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Property</th><th>Label</th><th>Object</th><th>Source</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_company_language</code></td><td>[Global] Company Language</td><td>Company</td><td>Derived from market (DE→German, NL→Dutch)</td></tr>
+                            <tr><td><code class="code-dark">g_preferred_language</code></td><td>[Global] Preferred Language</td><td>Contact</td><td>Product (app setting)</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>How it works:</strong> Default to company language. Override if contact sets different preference in app.</p>
+                    
+                    <h4>Market Ownership</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Property</th><th>Label</th><th>Object</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_sales_team</code></td><td>[Global] Sales Team</td><td>Company</td><td>Which team owns this company (DACH Sales / NL Sales)</td></tr>
+                            <tr><td><code class="code-dark">g_cs_team</code></td><td>[Global] CS Team</td><td>Company</td><td>CS assignment after conversion</td></tr>
+                            <tr><td><code class="code-dark">owner</code></td><td>Owner</td><td>Company</td><td>Individual rep within that team</td></tr>
+                        </tbody>
+                    </table>
+                    <p>This creates a 3-layer ownership model: <strong>Individual rep → Team → Region</strong>.</p>
+                </div>
+
+                <div class="content-section">
+                    <h3>What's Globally Standardized vs. Locally Configurable</h3>
+                    <div class="global-local-grid">
+                        <div class="global-col">
+                            <h4>Globally Standardized</h4>
+                            <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0.75rem;">Same everywhere to prevent fragmentation</p>
+                            <ul>
+                                <li>Pipeline stages and definitions</li>
+                                <li>Lifecycle stages</li>
+                                <li>Core property structure</li>
+                                <li>Lead scoring criteria</li>
+                                <li>Reporting dashboards</li>
+                                <li>Naming conventions (g_, m_de_)</li>
+                                <li>Automation logic</li>
+                            </ul>
+                        </div>
+                        <div class="local-col">
+                            <h4>Locally Configurable</h4>
+                            <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0.75rem;">Teams adapt without breaking the system</p>
+                            <ul>
+                                <li>Email templates (translated)</li>
+                                <li>Meeting scheduler links</li>
+                                <li>Playbooks and call scripts</li>
+                                <li>Team routing rules</li>
+                                <li>Market-specific properties (VAT)</li>
+                                <li>Holiday calendars</li>
+                                <li>Contact/Company views</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem;"><strong>Why this split?</strong> Things that roll up (reporting, forecasting) must be standardized. Things that face customers (emails, meetings) should be localized.</p>
+                </div>
+
+                <div class="content-section">
+                    <h3>How We Prevent Fragmentation as More Markets Are Added</h3>
+                    
+                    <h4>New Market Onboarding Checklist</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Step</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Add market value to <code>[Global] Market</code> dropdown</td></tr>
+                            <tr><td>2</td><td>Add market region to <code>[Global] Market Region</code> if new region</td></tr>
+                            <tr><td>3</td><td>Create market-specific property group if needed (e.g., <code>m_nl_</code> prefix)</td></tr>
+                            <tr><td>4</td><td>Clone and translate email templates into market folder</td></tr>
+                            <tr><td>5</td><td>Set up team routing workflow</td></tr>
+                            <tr><td>6</td><td>Create market filter in team dashboards</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Fragmentation Prevention Rules</h4>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>No new pipelines.</strong> New market = new dropdown value in existing pipeline.</li>
+                        <li><strong>No duplicating properties.</strong> If Germany has "VAT Number", Netherlands gets <code>m_nl_btw_number</code> with the same field type.</li>
+                        <li><strong>Templates in folders.</strong> Each market gets a subfolder in Templates. No loose files.</li>
+                        <li><strong>Quarterly audit.</strong> RevOps reviews market-specific properties. If 3+ markets need it, promote to global.</li>
+                    </ul>
+                    
+                    <h4>Technical Safeguards</h4>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>Workflow naming:</strong> <code>[Market] - Action - Trigger</code>. Example: <code>[NL] - Assign to NL Sales - Market = NL</code></li>
+                        <li><strong>Property dependency:</strong> Market-specific properties are conditional (only show when <code>[Global] Market</code> matches)</li>
+                        <li><strong>Reporting inheritance:</strong> New markets automatically appear in global reports via Market grouping</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>Pipeline Decision: One Global Pipeline vs. Multiple Pipelines</h3>
+                    <div class="insight-box"><strong>Recommendation:</strong> Single "Revenue Pipeline" for all markets. Differentiate via <strong style="color: var(--plancraft-green);">[Global] Market</strong> and <strong style="color: var(--plancraft-green);">[Global] Deal Type</strong> properties.</div>
+                    
+                    <h4>Why One Pipeline Wins</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Benefit</th><th>How It Works</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Unified forecasting</strong></td><td>"What's our Q1 pipeline?" is one query. Filter by Market or Deal Type for breakdowns.</td></tr>
+                            <tr><td><strong>No stage drift</strong></td><td>"Qualified" means the same thing in Germany and Netherlands. No confusion.</td></tr>
+                            <tr><td><strong>Faster market launches</strong></td><td>New market = add dropdown value. No pipeline cloning, no stage mapping.</td></tr>
+                            <tr><td><strong>Consistent deal aging</strong></td><td>Days in stage calculated the same way. Fair comparison across markets.</td></tr>
+                            <tr><td><strong>Simpler automation</strong></td><td>Workflows branch on Market property, not pipeline selection.</td></tr>
+                            <tr><td><strong>Executive clarity</strong></td><td>Leadership sees one pipeline report, grouped by market—not scattered across multiple pipelines.</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>How We Differentiate Without Multiple Pipelines</h4>
+                    <p>Instead of separate pipelines, we use properties to segment:</p>
+                    <table class="content-table">
+                        <thead><tr><th>Property</th><th>Label</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_market</code></td><td>[Global] Market</td><td>Which country (DE, AT, NL)</td></tr>
+                            <tr><td><code class="code-dark">g_deal_type</code></td><td>[Global] Deal Type</td><td>New Business / Expansion / Add Licenses</td></tr>
+                            <tr><td><code class="code-dark">g_sales_team</code></td><td>[Global] Sales Team</td><td>DACH Sales / NL Sales</td></tr>
+                        </tbody>
+                    </table>
+                    <p>Reports and dashboards filter/group by these properties. Same pipeline, different views.</p>
+                    
+                    <h4>When Would Multiple Pipelines Make Sense?</h4>
+                    <p>If sales processes fundamentally differ:</p>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>Enterprise vs. SMB</strong> → Different stages (legal review, procurement, multi-stakeholder)</li>
+                        <li><strong>Transactional vs. Strategic</strong> → Self-serve checkout vs. negotiated deals</li>
+                        <li><strong>Product lines</strong> → Selling hardware vs. software (different fulfillment)</li>
+                    </ul>
+                    
+                    <h4>Why This Doesn't Apply to Plancraft</h4>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>Same buyer persona</strong> → Small tradesperson (electrician, plumber, carpenter)</li>
+                        <li><strong>Same ACV</strong> → €60-250/mo across all markets</li>
+                        <li><strong>Same product</strong> → Identical software, just translated</li>
+                        <li><strong>Same decision process</strong> → Owner decides, no procurement team</li>
+                    </ul>
+                    <p>The differences are language and local regulations (VAT formats), not sales methodology.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page detail-page" id="task3">
+        <header class="detail-header">
+            <div class="detail-header-inner">
+                <button class="detail-back" onclick="showPage('hub')">← Back to Overview</button>
+                <div class="detail-nav">
+                    <button onclick="showPage('task2')">←</button>
+                    <button onclick="showPage('task4')">→</button>
+                </div>
+            </div>
+        </header>
+        <div class="detail-container">
+            <div class="detail-content">
+                <span class="detail-badge">Task 3 of 4</span>
+                <h1 class="detail-title">Automation Concepts</h1>
+                <p class="detail-subtitle">Two automations for retention and expansion — owned by CS/CX team.</p>
+                
+                <div class="section-assumptions">
+                    <h4>✓ Assumptions for This Section</h4>
+                    <ul>
+                        <li>CS/CX team owns churn prevention and expansion (not Sales)</li>
+                        <li>Product data can sync to HubSpot (daily)</li>
+                        <li>Stripe webhooks available for cancellation events</li>
+                        <li>Intercom used for support, can sync CSAT</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>Why These Two?</h3>
+                    <table class="content-table">
+                        <thead><tr><th>✓ Chosen</th><th>Deprioritized</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Churn Risk Alert</strong> — Proactive retention</td><td>PLG → Sales handoff — Likely exists</td></tr>
+                            <tr><td><strong>Expansion Opportunity</strong> — Surface upgrade signals</td><td>Onboarding — More marketing than CRM</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <h3>Automation 1: Churn Risk Alert</h3>
+                    <div class="automation-box">
+                        <h4>Business Problem</h4>
+                        <p>CS can't monitor thousands of customers. By the time someone cancels, it's too late.</p>
+                        <p><strong>Owner: CS/CX Team</strong></p>
+                    </div>
+                    <h4>Trigger Signals</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Property</th><th>Label</th><th>Source</th><th>Threshold</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_sync_usage_score</code></td><td>[Global] Sync Usage Score</td><td>Product</td><td>Dropped >50%</td></tr>
+                            <tr><td><code class="code-dark">g_sync_cancellation_scheduled</code></td><td>[Global] Sync Cancellation Scheduled</td><td>Stripe</td><td>= Yes</td></tr>
+                            <tr><td><code class="code-dark">g_sync_days_since_last_login</code></td><td>[Global] Sync Days Since Last Login</td><td>Product</td><td>> 14 days</td></tr>
+                            <tr><td><code class="code-dark">g_sync_csat_score</code></td><td>[Global] Sync CSAT Score</td><td>Intercom</td><td>< 3</td></tr>
+                        </tbody>
+                    </table>
+                    <h4>Risk Levels</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Conditions</th><th>Level</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>1 signal</td><td>Medium</td><td><code>[Global] Auto Churn Risk = Medium</code> — monitor</td></tr>
+                            <tr><td>2+ signals</td><td>High</td><td><code>= High</code> — task for CSM</td></tr>
+                            <tr><td>Cancellation scheduled</td><td>Critical</td><td><code>= Critical</code> — task + Slack alert</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>High-Level Logic (Make.com Workflow)</h4>
+                    <ol style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>Daily trigger:</strong> Fetch all active customers from HubSpot</li>
+                        <li><strong>Check signals:</strong> Count how many risk conditions are met</li>
+                        <li><strong>Calculate risk:</strong> 1 signal = Medium, 2+ = High, Cancellation scheduled = Critical</li>
+                        <li><strong>Update HubSpot:</strong> Set <code>[Auto] Churn Risk</code> property on Company</li>
+                        <li><strong>Create tasks:</strong> High/Critical → assign task to company owner</li>
+                        <li><strong>Slack alert:</strong> Critical only → post to #customer-success channel</li>
+                    </ol>
+                    
+                    <h4>Tools Involved</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>HubSpot</strong></td><td>Property updates, task creation, company data</td></tr>
+                            <tr><td><strong>Make.com</strong></td><td>Orchestration layer — fetches data, runs logic, triggers actions</td></tr>
+                            <tr><td><strong>Product API</strong></td><td>Provides usage score, last login data</td></tr>
+                            <tr><td><strong>Stripe</strong></td><td>Cancellation webhooks</td></tr>
+                            <tr><td><strong>Intercom</strong></td><td>CSAT scores</td></tr>
+                            <tr><td><strong>Slack</strong></td><td>Critical alerts to CS team</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Potential Failure Modes and Safeguards</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Failure Mode</th><th>Impact</th><th>Safeguard</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>False positives</strong> — Vacation period flagged as churn risk</td>
+                                <td>CSM wastes time on healthy customers</td>
+                                <td>
+                                    • Require 2+ signals for "High" alert<br>
+                                    • Exclude customers in "Onboarding" lifecycle stage (first 30 days)<br>
+                                    • Check: Has company ever had >7 active days? If no, don't flag inactivity
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alert fatigue</strong> — Too many Medium alerts, CSM ignores all</td>
+                                <td>Real churn risks get missed</td>
+                                <td>
+                                    • Only create tasks for High/Critical (not Medium)<br>
+                                    • Medium = passive property update for reporting only<br>
+                                    • Weekly digest email of Medium risks instead of individual tasks
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Duplicate alerts</strong> — Same customer flagged daily</td>
+                                <td>Spam tasks, angry CSMs</td>
+                                <td>
+                                    • Before creating task, check: Does open task already exist for this company?<br>
+                                    • Rate limit: Max 1 task per company per 7 days<br>
+                                    • Task description includes: "Last flagged: [date]"
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stale data</strong> — Product API is down, using 3-day-old usage data</td>
+                                <td>Inaccurate risk assessment</td>
+                                <td>
+                                    • Log sync timestamp in HubSpot: <code>[Sync] Last Product Sync</code><br>
+                                    • If sync is >48 hours old, pause automation<br>
+                                    • Send alert to RevOps: "Product sync stale, churn automation paused"
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wrong owner assignment</strong> — CSM left, task assigned to inactive user</td>
+                                <td>Alerts go unseen, customer churns</td>
+                                <td>
+                                    • Check owner is active HubSpot user before assigning<br>
+                                    • Fallback: If owner inactive, assign to CS Team Lead<br>
+                                    • Weekly audit: Companies with churn risk but no owner → reassign
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stripe webhook missed</strong> — Cancellation scheduled but webhook failed</td>
+                                <td>Critical alert never fires</td>
+                                <td>
+                                    • Daily batch check: Query Stripe for all scheduled cancellations<br>
+                                    • Compare to HubSpot <code>[Sync] Cancellation Scheduled</code><br>
+                                    • If mismatch detected, sync immediately and create task
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Monitoring & Maintenance</h4>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>Weekly CS review:</strong> Are flagged customers actually at risk? Adjust thresholds if false positive rate >30%</li>
+                        <li><strong>Monthly performance:</strong> How many flagged customers were saved vs churned? Track conversion rate.</li>
+                        <li><strong>Quarterly threshold tuning:</strong> As product evolves, usage patterns change. Re-calibrate "dropped >50%" threshold.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>Automation 2: Expansion Opportunity</h3>
+                    <div class="automation-box">
+                        <h4>Business Problem</h4>
+                        <p>Upgrade opportunities buried in product data. Business customer with 4 users on 1-license plan is ready for upsell — but no one sees it.</p>
+                        <p><strong>Owner: CS/CX Team</strong></p>
+                    </div>
+                    <h4>Trigger Signals</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Property</th><th>Label</th><th>Threshold</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_sync_active_users</code></td><td>[Global] Sync Active Users</td><td>Exceeds included licenses</td></tr>
+                            <tr><td><code class="code-dark">g_sync_feature_limit_hits</code></td><td>[Global] Sync Feature Limit Hits</td><td>Tried Pro features on Business</td></tr>
+                            <tr><td><code class="code-dark">g_subscription_plan</code></td><td>[Global] Subscription Plan</td><td>Not on Premium</td></tr>
+                        </tbody>
+                    </table>
+                    <h4>Workflow</h4>
+                    <ol style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li>Product detects: "4 active users, 1 license included"</li>
+                        <li>Syncs to HubSpot Company properties</li>
+                        <li>Workflow checks: Active > included? Not Premium? No open deal?</li>
+                        <li>Creates Deal with <code>[Global] Deal Type = Expansion</code></li>
+                        <li>Task to CSM: "Company X exceeded licenses"</li>
+                    </ol>
+                    
+                    <h4>High-Level Logic (HubSpot Workflow)</h4>
+                    <p><strong>Trigger:</strong> <code>[Global] Sync Active Users</code> is updated</p>
+                    <p><strong>Conditions (must all be true):</strong></p>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><code>[Global] Sync Active Users</code> > <code>[Global] Office Licenses</code> + 2 (buffer for grace period)</li>
+                        <li><code>[Global] Subscription Plan</code> ≠ Premium</li>
+                        <li><code>[Global] Subscription Status</code> = Active</li>
+                        <li>No open Deal where <code>[Global] Deal Type</code> = Expansion</li>
+                        <li>Company owner exists and is active</li>
+                    </ul>
+                    <p><strong>Actions:</strong></p>
+                    <ol style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li>Create Deal: "Expansion - [Company Name]"</li>
+                        <li>Set <code>[Global] Deal Type</code> = Expansion</li>
+                        <li>Set Deal owner = Company owner</li>
+                        <li>Set Deal amount = (Extra users × license price)</li>
+                        <li>Create task: "Company exceeding licenses — upsell opportunity"</li>
+                    </ol>
+                    
+                    <h4>Tools Involved</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>HubSpot Workflow</strong></td><td>Trigger on property change, conditional logic, deal creation</td></tr>
+                            <tr><td><strong>Product API</strong></td><td>Syncs active user count daily to HubSpot</td></tr>
+                            <tr><td><strong>HubSpot Operations Hub</strong></td><td>Calculated property for license overage amount</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Potential Failure Modes and Safeguards</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Failure Mode</th><th>Impact</th><th>Safeguard</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Duplicate deals</strong> — User count fluctuates, creates multiple deals</td>
+                                <td>Clutter in pipeline, confused CSMs</td>
+                                <td>
+                                    • Workflow checks for existing open Expansion deal before creating<br>
+                                    • Add suppression list: Companies with deal created in last 30 days<br>
+                                    • If deal already exists, update deal amount instead of creating new one
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Grace period abuse</strong> — Customer adds 1 user temporarily, deal created, user removed</td>
+                                <td>False opportunities waste CSM time</td>
+                                <td>
+                                    • Require overage for 7+ consecutive days before triggering<br>
+                                    • Store <code>[Auto] Days Over License Limit</code> counter<br>
+                                    • Only create deal when counter reaches 7
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wrong deal amount</strong> — Calculation uses outdated pricing</td>
+                                <td>Inaccurate forecasting, CSM quotes wrong price</td>
+                                <td>
+                                    • Store pricing in HubSpot: <code>[Global] Current License Price</code> property<br>
+                                    • Formula: (Active users - Included licenses) × License price<br>
+                                    • Add note to task: "Verify current pricing before presenting"
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Customer already knows</strong> — They're in self-serve upgrade flow</td>
+                                <td>Awkward CSM outreach to customer already purchasing</td>
+                                <td>
+                                    • Check <code>[Sync] In Upgrade Flow</code> property from product<br>
+                                    • If customer is in self-serve flow, suppress deal creation<br>
+                                    • Wait 24 hours; if not upgraded, then create deal
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Owner reassigned mid-automation</strong> — Deal created with wrong owner</td>
+                                <td>Deal sits unnoticed, opportunity lost</td>
+                                <td>
+                                    • Snapshot company owner at workflow start<br>
+                                    • If owner changes during workflow execution, use new owner<br>
+                                    • Fallback: If no owner, assign to CS Team Lead
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Feature limit hits ≠ willingness to pay</strong> — Customer trying features, not ready to buy</td>
+                                <td>Premature outreach annoys customer</td>
+                                <td>
+                                    • Require multiple feature limit hits (3+ in 7 days)<br>
+                                    • Combine with other signals: High usage score, team growth<br>
+                                    • Task priority: "Low" for feature hits alone, "High" if combined with license overage
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seasonal spike</strong> — Construction company adds 5 users for busy season, then removes</td>
+                                <td>Churn after upsell attempt</td>
+                                <td>
+                                    • Store <code>[Auto] User Count History</code> (30-day average)<br>
+                                    • If current count is 2× higher than 30-day avg, flag as "Seasonal spike?"<br>
+                                    • CSM task includes warning: "Check if temporary team expansion"
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Monitoring & Maintenance</h4>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>Weekly deal review:</strong> What % of expansion deals close? If <20%, thresholds too aggressive.</li>
+                        <li><strong>False positive tracking:</strong> CSMs can mark deals as "Not a real opportunity" — if >30%, tune logic.</li>
+                        <li><strong>Quarterly pricing sync:</strong> Ensure <code>[Global] Current License Price</code> matches actual pricing.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page detail-page" id="task4">
+        <header class="detail-header">
+            <div class="detail-header-inner">
+                <button class="detail-back" onclick="showPage('hub')">← Back to Overview</button>
+                <div class="detail-nav">
+                    <button onclick="showPage('task3')">←</button>
+                    <button disabled>→</button>
+                </div>
+            </div>
+        </header>
+        <div class="detail-container">
+            <div class="detail-content">
+                <span class="detail-badge">Task 4 of 4</span>
+                <h1 class="detail-title">Data Governance at Scale</h1>
+                <p class="detail-subtitle">With 50+ GTM users, governance prevents "temporary solutions becoming permanent damage."</p>
+                
+                <div class="section-assumptions">
+                    <h4>✓ Assumptions for This Section</h4>
+                    <ul>
+                        <li>HubSpot Enterprise available (field-level permissions)</li>
+                        <li>50+ GTM users across multiple teams</li>
+                        <li>RevOps team exists as gatekeepers</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>Property Naming Convention</h3>
+                    <table class="content-table">
+                        <thead><tr><th>Prefix</th><th>Meaning</th><th>Example</th></tr></thead>
+                        <tbody>
+                            <tr><td><code class="code-dark">g_</code></td><td>Global (all markets)</td><td><code>g_lead_score</code> → [Global] Lead Score</td></tr>
+                            <tr><td><code class="code-dark">m_de_</code></td><td>Germany-specific</td><td><code>m_de_vat_number</code> → [DE] VAT Number</td></tr>
+                            <tr><td><code class="code-dark">sync_</code></td><td>External system (read-only)</td><td><code>sync_stripe_mrr</code> → [Sync] Stripe MRR</td></tr>
+                            <tr><td><code class="code-dark">auto_</code></td><td>Automation (don't edit)</td><td><code>auto_churn_risk</code> → [Auto] Churn Risk</td></tr>
+                            <tr><td><code class="code-dark">temp_</code></td><td>Temporary (has expiry)</td><td><code>temp_q1_campaign</code> → [Temp] Q1 Campaign</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <h3>Workflow Governance</h3>
+                    <table class="content-table">
+                        <thead><tr><th>Tier</th><th>What</th><th>Who</th><th>Approval</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Templates, lists, views, reports</td><td>Any GTM user</td><td>None</td></tr>
+                            <tr><td>2</td><td>Workflows (emails, property updates)</td><td>GTM + RevOps</td><td>RevOps review</td></tr>
+                            <tr><td>3</td><td>Property creation, integrations</td><td>RevOps only</td><td>Lead sign-off</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <h3>Permission Matrix</h3>
+                    <table class="content-table" style="text-align: center; font-size: 0.85rem;">
+                        <thead><tr><th style="text-align: left;">Property</th><th>DACH</th><th>NL</th><th>CS</th><th>Mktg</th><th>RevOps</th></tr></thead>
+                        <tbody>
+                            <tr><td style="text-align: left;">[Global]</td><td style="color: #00C896; font-weight: 700;">Edit</td><td style="color: #00C896; font-weight: 700;">Edit</td><td style="color: #00C896; font-weight: 700;">Edit</td><td style="color: #3B82F6;">View</td><td style="color: #00C896; font-weight: 700;">Edit</td></tr>
+                            <tr><td style="text-align: left;">[DE]</td><td style="color: #00C896; font-weight: 700;">Edit</td><td style="color: #9999A8;">Hidden</td><td style="color: #3B82F6;">View</td><td style="color: #9999A8;">Hidden</td><td style="color: #00C896; font-weight: 700;">Edit</td></tr>
+                            <tr><td style="text-align: left;">[Sync]</td><td style="color: #3B82F6;">View</td><td style="color: #3B82F6;">View</td><td style="color: #3B82F6;">View</td><td style="color: #3B82F6;">View</td><td style="color: #3B82F6;">View</td></tr>
+                            <tr><td style="text-align: left;">[Auto]</td><td style="color: #3B82F6;">View</td><td style="color: #3B82F6;">View</td><td style="color: #3B82F6;">View</td><td style="color: #3B82F6;">View</td><td style="color: #3B82F6;">View</td></tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 1rem;"><span style="color: #00C896; font-weight: 700;">Edit</span> = owns data. <span style="color: #3B82F6;">View</span> = read-only. <span style="color: #9999A8;">Hidden</span> = reduces clutter.</p>
+                </div>
+
+                <div class="content-section">
+                    <h3>Deduplication Strategy</h3>
+                    <h4>For Contacts</h4>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>Email matching</strong> — Primary identifier (exact match)</li>
+                        <li><strong>Phone matching</strong> — Normalize formats (+49 30 123 vs 030123) to catch same person entered twice</li>
+                        <li><strong>Name + Company</strong> — Same person with multiple emails (personal + work)</li>
+                    </ul>
+                    <h4>For Companies</h4>
+                    <ul style="color: var(--gray-600); padding-left: 1.5rem;">
+                        <li><strong>Domain matching</strong> — Primary identifier (email domain = company)</li>
+                        <li><strong>Fuzzy name matching</strong> — Catch variations: "Müller GmbH" vs "Mueller GmbH" vs "Muller GmbH"</li>
+                        <li><strong>Stripe ID</strong> — Definitive match from billing system</li>
+                        <li><strong>VAT number</strong> — German market identifier (legal uniqueness)</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>Preventing Temporary Solutions from Becoming Permanent Damage</h3>
+                    
+                    <p>At 50+ GTM users, "temporary" becomes permanent by default. Solution: Explicit experiments with built-in expiry.</p>
+                    
+                    <h4>The System</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Rule</th><th>How It Works</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Only RevOps creates experiments</strong></td>
+                                <td>Teams request, RevOps builds. Ensures governance from day one.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Naming: [EXP] – Owner – Use Case – Date</strong></td>
+                                <td>Example: <code>[EXP] - CS - Churn Alert v2 - 2025-01</code><br>Property: <code>exp_churn_risk</code> → <code>[EXP] Churn Risk</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Technical isolation</strong></td>
+                                <td>Experiments can read global properties but cannot overwrite:<br>
+                                    • Lifecycle stages<br>
+                                    • Revenue fields (MRR, ARR)<br>
+                                    • Global properties (g_)<br>
+                                    Can: create tasks, send alerts, update exp_ properties</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. Time-bound by default</strong></td>
+                                <td>Every experiment has:<br>
+                                    • Auto-disable date (60 days), OR<br>
+                                    • Review task at Day 45, OR<br>
+                                    • Conditional shutoff: IF Date > Expiry THEN stop</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. Rebuild, don't rename</strong></td>
+                                <td>When successful:<br>
+                                    1. Build new workflow with production naming<br>
+                                    2. Use global properties (g_ not exp_)<br>
+                                    3. Test in parallel for 7 days<br>
+                                    4. Activate new, deprecate old<br>
+                                    5. After 30 days: delete experiment</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Example: 60-Day Lifecycle</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Day</th><th>What Happens</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>1</strong></td><td>CS requests test. RevOps creates: <code>[EXP] - CS - Churn Alert v2 - 2025-01</code></td></tr>
+                            <tr><td><strong>45</strong></td><td>Auto-task created: "Review results. Promote, extend, or delete?"</td></tr>
+                            <tr><td><strong>50</strong></td><td>Decision: Promote. RevOps rebuilds as <code>[CS] - Churn Alert - Usage Drop</code></td></tr>
+                            <tr><td><strong>55</strong></td><td>New workflow activated. Old workflow deprecated.</td></tr>
+                            <tr><td><strong>60</strong></td><td>If no decision made: Workflow auto-disables + Slack alert</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>What This Prevents</h4>
+                    <table class="content-table">
+                        <thead><tr><th>Without This</th><th>With This</th></tr></thead>
+                        <tbody>
+                            <tr><td>"Temp webinar workflow" still running 12 months later</td><td>[EXP] workflow auto-disables at 60 days. Forces decision.</td></tr>
+                            <tr><td>Sales test accidentally overwrites global lead score</td><td>Experiments can't touch global properties</td></tr>
+                            <tr><td>Experiment works, gets renamed to production. Hidden bugs surface.</td><td>Forced rebuild ensures production standards</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById(pageId).scrollTop = 0;
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const activePage = document.querySelector('.page.active');
+                if (activePage && activePage.id !== 'welcome' && activePage.id !== 'hub') showPage('hub');
+                else if (activePage && activePage.id === 'hub') showPage('welcome');
+            }
+        });
+    </script>
+</body>
+</html>
