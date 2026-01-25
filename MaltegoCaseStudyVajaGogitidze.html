@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management Case Study | Maltego</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --maltego-yellow: #FFC800;
+            --maltego-yellow-dark: #E6B400;
+            --maltego-yellow-light: #FFF7E0;
+            --maltego-yellow-subtle: #FFFBF0;
+            --maltego-blue: #1A2332;
+            --maltego-blue-secondary: #2D3A4D;
+            --maltego-grey-blue: #3D4D5F;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F7;
+            --gray-200: #E8E8ED;
+            --gray-400: #9999A8;
+            --gray-600: #666677;
+            --gray-800: #333344;
+            --white: #FFFFFF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--gray-50); color: var(--maltego-blue); line-height: 1.7; font-size: 15px; }
+        
+        .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1; }
+        .page.active { opacity: 1; visibility: visible; z-index: 10; }
+        
+        /* Welcome Page */
+        .welcome-page { background: linear-gradient(145deg, var(--maltego-blue) 0%, #243447 50%, var(--maltego-blue-secondary) 100%); display: flex; align-items: center; justify-content: center; }
+        .welcome-content { text-align: center; z-index: 1; max-width: 720px; padding: 2rem; }
+        .welcome-badge { display: inline-block; background: rgba(255, 200, 0, 0.12); border: 1px solid rgba(255, 200, 0, 0.25); color: var(--maltego-yellow); padding: 0.5rem 1.25rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.75px; margin-bottom: 2rem; text-transform: uppercase; }
+        .welcome-title { font-size: 3rem; font-weight: 800; color: var(--white); margin-bottom: 1rem; letter-spacing: -1.5px; line-height: 1.1; }
+        .welcome-title span { background: linear-gradient(135deg, var(--maltego-yellow) 0%, #FFD633 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .welcome-subtitle { font-size: 1.15rem; color: var(--gray-400); margin-bottom: 2rem; }
+        .welcome-thank-you { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 1.5rem 2rem; margin-bottom: 2rem; color: var(--gray-400); font-size: 0.95rem; }
+        .welcome-thank-you strong { color: var(--white); }
+        .btn-start { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--maltego-yellow); color: var(--maltego-blue); padding: 1rem 2.25rem; border-radius: 50px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; box-shadow: 0 8px 32px rgba(255, 200, 0, 0.3); transition: all 0.3s ease; }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255, 200, 0, 0.4); background: var(--maltego-yellow-dark); }
+        
+        /* Hub Page */
+        .hub-page { background: var(--gray-50); }
+        .hub-header { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .hub-header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .hub-logo { font-size: 1.1rem; font-weight: 700; color: var(--maltego-blue); }
+        .hub-logo span { color: var(--maltego-yellow-dark); }
+        .hub-nav-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--gray-200); border-radius: 8px; background: var(--white); color: var(--gray-600); font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .hub-nav-btn:hover { border-color: var(--maltego-yellow); }
+        .hub-container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+        
+        /* Executive Section */
+        .exec-section { background: var(--white); border-radius: 16px; padding: 2rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border-left: 4px solid var(--maltego-yellow); }
+        .exec-section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--maltego-blue); }
+        .exec-section p { line-height: 1.8; }
+        
+        /* Cards */
+        .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; max-width: 800px; margin: 0 auto; }
+        .task-card { background: var(--white); border-radius: 16px; padding: 2rem; cursor: pointer; transition: all 0.3s ease; border: 1px solid var(--gray-200); position: relative; overflow: hidden; min-height: 160px; }
+        .task-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); border-color: var(--maltego-yellow); }
+        .task-card-number { display: inline-block; background: var(--maltego-yellow-light); color: var(--maltego-yellow-dark); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem; }
+        .task-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--maltego-blue); margin-bottom: 0.5rem; }
+        .task-card p { font-size: 0.9rem; color: var(--gray-600); margin: 0; }
+        
+        /* Detail Page */
+        .detail-page { background: var(--gray-50); }
+        .detail-header { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .detail-header-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .detail-back { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--gray-200); border-radius: 8px; background: var(--white); color: var(--gray-600); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .detail-back:hover { border-color: var(--maltego-yellow); }
+        .detail-nav { display: flex; gap: 0.5rem; }
+        .detail-nav button { width: 36px; height: 36px; border: 1px solid var(--gray-200); border-radius: 8px; background: var(--white); color: var(--gray-600); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .detail-nav button:hover:not(:disabled) { border-color: var(--maltego-yellow); }
+        .detail-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .detail-container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        .detail-content { background: var(--white); border-radius: 16px; padding: 2.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        .detail-badge { display: inline-block; background: var(--maltego-yellow-light); color: var(--maltego-yellow-dark); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+        .detail-title { font-size: 2rem; font-weight: 800; color: var(--maltego-blue); margin-bottom: 0.75rem; letter-spacing: -0.5px; }
+        .detail-subtitle { font-size: 1.05rem; color: var(--gray-600); margin-bottom: 2rem; }
+        
+        /* Content Sections */
+        .content-section { margin-bottom: 2.5rem; }
+        .content-section h3 { font-size: 1.3rem; font-weight: 700; color: var(--maltego-blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--maltego-yellow); display: inline-block; }
+        .content-section h4 { font-size: 1rem; font-weight: 600; color: var(--maltego-blue-secondary); margin: 1.25rem 0 0.75rem; }
+        .content-section p { margin-bottom: 1rem; color: var(--gray-600); }
+        .content-section ul { color: var(--gray-600); padding-left: 1.5rem; margin-bottom: 1rem; }
+        .content-section li { margin-bottom: 0.5rem; }
+        .content-section strong { color: var(--maltego-blue); }
+        
+        /* Special Boxes */
+        .email-box { background: var(--gray-100); border-left: 4px solid var(--maltego-yellow); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .email-box .email-header { font-weight: 600; color: var(--maltego-blue); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .email-box .email-body { color: var(--gray-600); font-size: 0.95rem; white-space: pre-line; }
+        
+        .quote-box { background: var(--maltego-yellow-subtle); border: 1px solid rgba(255, 200, 0, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .quote-box h4 { color: var(--maltego-yellow-dark); font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
+        
+        .insight-box { background: var(--maltego-blue); color: var(--white); padding: 1.25rem 1.5rem; border-radius: 12px; margin: 1.5rem 0; font-size: 0.95rem; }
+        .insight-box strong { color: var(--maltego-yellow); }
+        
+        /* Tables */
+        .content-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+        .content-table th { background: var(--maltego-blue); color: var(--white); padding: 0.85rem 1rem; text-align: left; font-weight: 600; }
+        .content-table th:first-child { border-radius: 8px 0 0 0; }
+        .content-table th:last-child { border-radius: 0 8px 0 0; }
+        .content-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--gray-200); color: var(--gray-600); vertical-align: top; }
+        .content-table tbody tr:hover { background: var(--maltego-yellow-subtle); }
+        
+        code { background: var(--gray-100); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.85em; }
+        
+        .hub-footer { text-align: center; padding: 2rem; color: var(--gray-400); font-size: 0.85rem; }
+        
+        @media (max-width: 768px) { 
+            .cards-grid { grid-template-columns: 1fr; } 
+            .welcome-title { font-size: 2.25rem; }
+            .detail-content { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div class="page welcome-page active" id="welcome">
+        <div class="welcome-content">
+            <div class="welcome-badge">Order Management Manager Challenge</div>
+            <h1 class="welcome-title">Professional Order Management<br>for <span>Maltego</span></h1>
+            <p class="welcome-subtitle">Interview Case Study Solutions — Customer-Centric, Operationally Sound</p>
+            <button class="btn-start" onclick="showPage('hub')">View Solutions →</button>
+            <p style="margin-top: 2rem; color: var(--gray-400); font-size: 0.85rem;">Created by <strong style="color: var(--white);">Vaja Gogitidze</strong></p>
+        </div>
+    </div>
+
+    <!-- Hub Page -->
+    <div class="page hub-page" id="hub">
+        <header class="hub-header">
+            <div class="hub-header-inner">
+                <div class="hub-logo">Mal<span>tego</span> Case Study</div>
+                <button class="hub-nav-btn" onclick="showPage('welcome')">← Back</button>
+            </div>
+        </header>
+        <div class="hub-container">
+            <section class="exec-section" style="margin-bottom: 2.5rem;">
+                <h2>The Role</h2>
+                <p style="color: var(--gray-600); margin-bottom: 1.5rem;">Maltego is a fast-growing tech scale-up, empowering investigators worldwide with cutting-edge data analysis tools. As we expand, our Order Management & Operations (OMO) team is central to ensuring seamless order processing, billing, and compliance. We are seeking an experienced Order Management Manager to support the team in optimizing the order-to-cash processes, driving automation, and supporting scalable growth across our global operations.</p>
+                <p style="color: var(--gray-600); margin-bottom: 0;">As Order Management Manager, you will work closely with our Account Management, Sales Development, Customer Success, Business Systems, and Business Intelligence functions to ensure that our customers get up-to-date quotes, proposals and contract information.</p>
+            </section>
+
+            <section>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--maltego-blue); margin-bottom: 1.5rem; text-align: center;">Case Study Solutions</h2>
+                <div class="cards-grid">
+                    <div class="task-card" onclick="showPage('task1')">
+                        <span class="task-card-number">Task 1</span>
+                        <h3>Product Recommendation Email</h3>
+                        <p>Professional B2B response to automotive customer inquiry with clear product mapping and EULA reference.</p>
+                    </div>
+                    <div class="task-card" onclick="showPage('task2')">
+                        <span class="task-card-number">Task 2</span>
+                        <h3>Quote Generator & Email</h3>
+                        <p>Dynamic Excel quote structure with German VAT, multi-year discount, and professional customer quote email.</p>
+                    </div>
+                    <div class="task-card" onclick="showPage('task3')">
+                        <span class="task-card-number">Task 3</span>
+                        <h3>Purchase Order Validation</h3>
+                        <p>PO rejection with 6 specific issues identified and polite correction request to customer procurement.</p>
+                    </div>
+                    <div class="task-card" onclick="showPage('task4')">
+                        <span class="task-card-number">Task 4</span>
+                        <h3>CRM Data Quality & Gamification</h3>
+                        <p>Feedback conversation framework and "Revenue Ready Score" gamification to drive CRM adoption.</p>
+                    </div>
+                </div>
+            </section>
+            <footer class="hub-footer">Click any task to view detailed solution • Press ESC to return to overview</footer>
+        </div>
+    </div>
+
+    <!-- Task 1: Product Recommendation Email -->
+    <div class="page detail-page" id="task1">
+        <header class="detail-header">
+            <div class="detail-header-inner">
+                <button class="detail-back" onclick="showPage('hub')">← Back to Overview</button>
+                <div class="detail-nav">
+                    <button disabled>←</button>
+                    <button onclick="showPage('task2')">→</button>
+                </div>
+            </div>
+        </header>
+        <div class="detail-container">
+            <div class="detail-content">
+                <span class="detail-badge">Task 1 of 4</span>
+                <h1 class="detail-title">Product Recommendation Email</h1>
+                <p class="detail-subtitle">Professional B2B response to automotive customer inquiry</p>
+
+                <div class="quote-box">
+                    <h4>✓ Key Assumptions</h4>
+                    <ul style="color: var(--gray-600); margin: 0;">
+                        <li><strong>Account Management support = Technical Support:</strong> I assume Professional Plan's "pooled Account Manager" includes technical support access. If only "Custom Services" (Enterprise) provides technical support, then Professional would not meet customer requirements and Enterprise would be necessary.</li>
+                        <li><strong>2 users = Small team:</strong> Professional supports up to 5 users, making it appropriate. Enterprise is designed for 5+ users.</li>
+                        <li><strong>Graph entity limits:</strong> Professional's "unlimited entities" satisfies the 20,000 entity requirement without needing Enterprise.</li>
+                        <li><strong>Maltego Cases = Case Management:</strong> I assume the "Maltego Cases" feature in Professional satisfies the cloud-based case management requirement with access controls.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>Customer Requirements</h3>
+                    <ul>
+                        <li>Dedicated technical support</li>
+                        <li>Build graphs with up to 20,000 entities</li>
+                        <li>Cloud-based case management with access control</li>
+                        <li>Browser-based, mobile-friendly OSINT tool for non-technical analysts</li>
+                        <li>Latest EULA documentation</li>
+                    </ul>
+                </div>
+
+                <div class="email-box">
+                    <div class="email-header">To: Bavarian Automotive Manufacturer</div>
+                    <div class="email-header">From: Vaja Gogitidze, Order Management Manager</div>
+                    <div class="email-header">Subject: Maltego Solution for Your OSINT & Investigation Requirements</div>
+                    <div class="email-body" style="margin-top: 1rem;">
+Dear Bavarian Automotive Manufacturer Team,
+
+Thank you for your interest in Maltego. Based on your requirements, I recommend our <strong>Professional Plan</strong> which perfectly matches your needs:
+
+<strong>Recommended Solution: Maltego Professional (Standard)</strong>
+
+<strong>Your Requirements → Our Products:</strong>
+
+1. <strong>Dedicated Technical Support</strong>
+   Professional Plan includes pooled Account Manager support and access to our expert technical support team during business hours via our support portal.
+
+2. <strong>Build Graphs with up to 20,000 Entities</strong>
+   <strong>Maltego Graph (Desktop)</strong> provides unlimited entity capacity for complex link analysis. You can easily visualize 20,000+ entities and connections in your investigations.
+
+3. <strong>Cloud-Based Case Management with Access Control</strong>
+   <strong>Maltego Cases</strong> (included in Professional) offers secure, cloud-based case storage with file encryption, collaboration features, and granular access controls for team-based investigations.
+
+4. <strong>Browser-Based, Mobile-Friendly OSINT for Non-Technical Analysts</strong>
+   <strong>Maltego Search</strong> (unlimited access in Professional) is specifically designed as a quick OSINT lookup tool accessible via browser. Non-technical analysts can start investigations from email addresses, phone numbers, names, or domains without complex technical knowledge.
+
+<strong>What's Included in Professional Standard:</strong>
+• Maltego Graph (Desktop) – full link analysis platform
+• Maltego Search (Browser) – unlimited quick OSINT lookups
+• 20,000 Maltego Credits/month for commercial data access
+• Maltego Cases – secure cloud collaboration
+• Hunchly – automatic web capture and archiving
+• Access to 100+ data connectors for automotive-specific intelligence
+
+<strong>EULA & Legal Documentation</strong>
+Our End User License Agreement and all legal documents are available at: <strong>https://get.maltego.com/legal</strong>
+
+Best regards,
+<strong>Vaja Gogitidze</strong>
+Order Management Manager
+Maltego Technologies
+<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5d2b3c373c1d303c3129383a32733e3230">[email&#160;protected]</a>
++49 15565828419
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <strong>Why This Approach:</strong> Direct requirement-to-product mapping without overselling. Used customer's exact language. Recommended Professional (not Enterprise) because they only need 2 users. Provided EULA link immediately as requested. Professional tone appropriate for B2B procurement.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task 2: Quote Generator -->
+    <div class="page detail-page" id="task2">
+        <header class="detail-header">
+            <div class="detail-header-inner">
+                <button class="detail-back" onclick="showPage('hub')">← Back to Overview</button>
+                <div class="detail-nav">
+                    <button onclick="showPage('task1')">←</button>
+                    <button onclick="showPage('task3')">→</button>
+                </div>
+            </div>
+        </header>
+        <div class="detail-container">
+            <div class="detail-content">
+                <span class="detail-badge">Task 2 of 4</span>
+                <h1 class="detail-title">Quote Generator & Email</h1>
+                <p class="detail-subtitle">Dynamic Excel structure and customer quote email</p>
+
+                <div class="quote-box">
+                    <h4>✓ Key Assumptions</h4>
+                    <ul style="color: var(--gray-600); margin: 0;">
+                        <li><strong>Pricing:</strong> Based on public pricing from maltego.com (~€7,500/user/year for Professional Standard). Actual pricing may require sales team confirmation.</li>
+                        <li><strong>Multi-year discount:</strong> 10% is standard SaaS practice for 2-year commitments. Customer explicitly asked about discounts.</li>
+                        <li><strong>German VAT (19%):</strong> Munich customer = German billing entity. B2B transaction within Germany requires VAT unless customer provides valid VAT ID for reverse charge.</li>
+                        <li><strong>Annual billing:</strong> Assumed standard practice for enterprise subscriptions. Improves customer cash flow vs. upfront payment.</li>
+                        <li><strong>Legal entity:</strong> Maltego Technologies GmbH is the correct European entity for German customers (vs. US entity).</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>Quote Email to Customer</h3>
+                </div>
+
+                <div class="email-box">
+                    <div class="email-header">Subject: Quote Q-2026-012 – Maltego Professional for 2 Users (2-Year Agreement)</div>
+                    <div class="email-body" style="margin-top: 1rem;">
+Dear Bavarian Automotive Manufacturer Team,
+
+Thank you for confirming your interest in Maltego. Please find attached your formal quotation.
+
+<strong>Quote Summary:</strong>
+• <strong>2 × Maltego Professional Standard licenses</strong> (Named User, 2-year term)
+• Includes: Maltego Graph, Maltego Search (unlimited), Maltego Cases, 20,000 Credits/month, Hunchly
+
+<strong>Pricing:</strong>
+• List Price (2 years, 2 users): €30,000
+• <strong>Multi-Year Discount (10%)</strong>: -€3,000
+• <strong>Total (excl. VAT)</strong>: €27,000
+• <strong>VAT (19%)</strong>: €5,130
+• <strong>Total (incl. VAT)</strong>: €32,130
+
+<strong>Billing Details:</strong>
+• Payment Terms: Net 30
+• Billing Schedule: Annual invoicing
+  - Year 1 Invoice: €16,065
+  - Year 2 Invoice: €16,065
+• Bill To Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="89cce4f9e5e6f0ececb8c9cbc8c4a7edec">[email&#160;protected]</a>
+• Ship To Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="74311904181b0d111146343635395a1011">[email&#160;protected]</a>
+• Customer VAT ID: 12345678
+
+This quote is valid until <strong>February 24, 2026</strong>.
+
+Best regards,
+<strong>Vaja Gogitidze</strong>
+Order Management Manager
+Maltego Technologies
+<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="493f282328092428253d2c2e26672a2624">[email&#160;protected]</a>
++49 15565828419
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <strong>Why This Approach:</strong> 10% discount (customer explicitly asked). German VAT included (Munich customer). Annual billing improves cash flow. Yellow discount cell = sales flexibility. Quote email proactively lists PO requirements to prevent Task 3 scenarios.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task 3: PO Validation -->
+    <div class="page detail-page" id="task3">
+        <header class="detail-header">
+            <div class="detail-header-inner">
+                <button class="detail-back" onclick="showPage('hub')">← Back to Overview</button>
+                <div class="detail-nav">
+                    <button onclick="showPage('task2')">←</button>
+                    <button onclick="showPage('task4')">→</button>
+                </div>
+            </div>
+        </header>
+        <div class="detail-container">
+            <div class="detail-content">
+                <span class="detail-badge">Task 3 of 4</span>
+                <h1 class="detail-title">Purchase Order Validation</h1>
+                <p class="detail-subtitle">PO rejection with specific corrections required</p>
+
+                <div class="quote-box">
+                    <h4>✓ Key Assumptions</h4>
+                    <ul style="color: var(--gray-600); margin: 0;">
+                        <li><strong>Order Management role:</strong> OM Manager is responsible for PO validation and invoice issuance, not just quote generation.</li>
+                        <li><strong>System requirements:</strong> License provisioning system requires specific product names and term dates to configure correctly.</li>
+                        <li><strong>Compliance priority:</strong> Cannot issue invoice without VAT ID for intra-EU B2B transactions (legal/tax requirement).</li>
+                        <li><strong>Quote reference:</strong> All POs should reference original quote to verify commercial terms were agreed upon.</li>
+                        <li><strong>Better to delay than error:</strong> 2-day delay for corrections is preferable to provisioning wrong licenses or compliance issues.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>PO Analysis: PO-2025-BAM-4471</h3>
+                    <div class="insight-box">
+                        <strong>Decision: CANNOT ACCEPT & INVOICE</strong><br>
+                        Multiple critical issues identified that would cause downstream operational problems.
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>Critical Issues Preventing Acceptance</h3>
+                    
+                    <table class="content-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Issue</th>
+                                <th>Problem</th>
+                                <th>Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Incomplete Product Descriptions</strong></td>
+                                <td>Shows "Maltego Organization" and "Additional Seat" with no specific product names, license types, or term duration. Customer requested "Professional" package, not "Organization"</td>
+                                <td>Cannot provision correct licenses; revenue recognition impossible; product mismatch with customer request</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Missing Subscription Term</strong></td>
+                                <td>No start/end dates or term duration specified</td>
+                                <td>Cannot configure license expiration; billing schedule unclear</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Missing VAT ID</strong></td>
+                                <td>Customer VAT registration number not provided</td>
+                                <td>Cannot issue compliant B2B invoice for German customer</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. Missing Quote Reference</strong></td>
+                                <td>No quote number referenced</td>
+                                <td>Cannot verify agreed pricing, products, or commercial terms</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. Pricing Mismatch & Math Error</strong></td>
+                                <td>€160,000 + €60,000 = €220,000 (not €210,000 as shown). Amount far exceeds standard Professional pricing (~€30,000 for 2 users, 2 years)</td>
+                                <td>Requires verification against original quote; possible calculation error on PO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>6. Missing Ship-To Email</strong></td>
+                                <td>Only name provided (Max Mustermann)</td>
+                                <td>No email for license delivery and technical communication</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <h3>Email Response to Customer</h3>
+                </div>
+
+                <div class="email-box">
+                    <div class="email-header">Subject: PO 2025-BAM-4471 – Information Required Before Processing</div>
+                    <div class="email-body" style="margin-top: 1rem;">
+Dear Accounts Payable Team,
+
+Thank you for submitting Purchase Order <strong>2025-BAM-4471</strong>. We're eager to process your order and get your team onboarded, but I've identified several items that need clarification before we can accept the PO and issue your invoice.
+
+<strong>Required Information:</strong>
+
+<strong>1. Product Details & Term Duration</strong>
+Please specify the exact products ordered (reference original quote):
+• Your inquiry mentioned "Professional" package, but PO shows "Maltego Organization"
+• Product names should be: "Maltego Professional Standard" (or Professional Advanced/Enterprise if applicable)
+• License type (Named User, Concurrent, etc.)
+• <strong>Subscription term: Start date and end date</strong> (e.g., "2-year term: Feb 1, 2026 – Jan 31, 2028")
+
+<strong>2. Customer VAT Registration Number</strong>
+• Required for B2B invoicing compliance
+• Please provide your VAT ID in format: DE[9 digits]
+
+<strong>3. Quote Reference Number</strong>
+• Which quote does this PO reference? (e.g., Q-2026-012)
+• This helps us verify agreed pricing and commercial terms
+
+<strong>4. Ship-To Contact Email</strong>
+• Current PO shows: Max Mustermann (no email)
+• Please provide email address for license delivery and technical communication
+
+<strong>5. Pricing Verification & Calculation Error</strong>
+• The PO total shows €210,000, but line items sum to €220,000 (€160,000 + €60,000)
+• Please verify: Does this match your approved quote?
+• Standard Professional pricing for 2 users, 2 years is approximately €30,000
+• If you don't have a quote yet, I'm happy to prepare one for your review
+
+<strong>Why This Matters:</strong>
+Without complete product specifications and term dates, we cannot:
+• Provision the correct licenses for your team
+• Issue a compliant invoice
+• Configure proper license expiration
+• Ensure accurate billing schedule
+
+<strong>Next Steps:</strong>
+Once you provide the above information (or issue a revised PO), we'll process your order immediately. Standard processing time is 2 business days after PO acceptance.
+
+I'm here to help expedite this. Feel free to call me directly if it's easier to clarify over the phone.
+
+Best regards,
+<strong>Vaja Gogitidze</strong>
+Order Management Manager
+Maltego Technologies GmbH
+<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e492858e85a48985889081838bca878b89">[email&#160;protected]</a>
++49 15565828419
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <strong>Why This Approach:</strong> Cannot accept due to downstream operational risks (wrong licenses, compliance issues). Numbered list makes it easy for procurement to delegate internally. Polite, helpful tone maintains relationship. Explained "why this matters" to educate procurement team. Better to delay 2 days than provision wrong licenses.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task 4: CRM Gamification -->
+    <div class="page detail-page" id="task4">
+        <header class="detail-header">
+            <div class="detail-header-inner">
+                <button class="detail-back" onclick="showPage('hub')">← Back to Overview</button>
+                <div class="detail-nav">
+                    <button onclick="showPage('task3')">←</button>
+                    <button disabled>→</button>
+                </div>
+            </div>
+        </header>
+        <div class="detail-container">
+            <div class="detail-content">
+                <span class="detail-badge">Task 4 of 4</span>
+                <h1 class="detail-title">CRM Data Quality & Gamification</h1>
+                <p class="detail-subtitle">Feedback conversation framework and adoption strategy</p>
+
+                <div class="quote-box">
+                    <h4>✓ Key Assumptions</h4>
+                    <ul style="color: var(--gray-600); margin: 0;">
+                        <li><strong>Root cause:</strong> Poor CRM hygiene stems from friction (too complex/time-consuming), not malicious intent or laziness.</li>
+                        <li><strong>Sales motivation:</strong> Account Managers care most about commission speed and reducing admin interruptions, not forecast accuracy.</li>
+                        <li><strong>Technical capability:</strong> HubSpot/Salesforce can automatically calculate "Opportunity Health Score" via workflow automation.</li>
+                        <li><strong>Tier benefits:</strong> Fast quote turnaround is more valuable to AMs than gift cards or recognition alone.</li>
+                        <li><strong>Team dynamics:</strong> Peer accountability (team goal) is effective without creating toxic competition if framed correctly.</li>
+                        <li><strong>RevOps bandwidth:</strong> Solution must be automated; manual scoring or enforcement won't scale.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>1. Preparation (Evidence-Based)</h3>
+                    <ul>
+                        <li>Pull 2-3 specific examples where missing CRM data caused delays</li>
+                        <li>Example: "Your Q4 deal sat in legal for 4 days waiting for billing entity—delayed commission"</li>
+                        <li>Identify pattern: Which fields are consistently missing?</li>
+                        <li>Come with facts, not opinions</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>2. The Conversation</h3>
+                    
+                    <div class="quote-box">
+                        <h4>Opening (Direct & Collaborative)</h4>
+                        <p style="color: var(--gray-600); margin: 0; font-style: italic;">"I want to make quotes faster for you. Right now, missing CRM data is slowing us both down—let's fix it together."</p>
+                    </div>
+
+                    <h4>Frame Impact Around THEIR Pain:</h4>
+                    <ul>
+                        <li>Missing billing contact → Finance can't draft contract → deal stuck in legal → <strong>commission delayed</strong></li>
+                        <li>Incomplete deal data → I ping you 3 times for info → <strong>interrupts your selling time</strong></li>
+                        <li>Missing close dates → Can't prioritize your quote requests → <strong>slower turnaround</strong></li>
+                    </ul>
+
+                    <h4>Solution: Reduce Required Fields</h4>
+                    <p>Only 4 fields are mandatory before deal close:</p>
+                    <table class="content-table">
+                        <thead>
+                            <tr>
+                                <th>Required Field</th>
+                                <th>Why It Matters</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Close Date</td>
+                                <td>Quote prioritization</td>
+                            </tr>
+                            <tr>
+                                <td>Next Step</td>
+                                <td>Deal progression tracking</td>
+                            </tr>
+                            <tr>
+                                <td>Decision Maker Contact</td>
+                                <td>Contract routing</td>
+                            </tr>
+                            <tr>
+                                <td>Billing Contact</td>
+                                <td>Invoice processing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Everything else = optional.</strong></p>
+                </div>
+
+                <div class="content-section">
+                    <h3>3. Gamification: "Revenue Ready Score"</h3>
+                    
+                    <h4>Opportunity Health Score (0-100 points per deal)</h4>
+                    <table class="content-table">
+                        <thead>
+                            <tr>
+                                <th>Criteria</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Required fields complete</td>
+                                <td>40 pts</td>
+                            </tr>
+                            <tr>
+                                <td>Contacts mapped (decision maker + billing)</td>
+                                <td>30 pts</td>
+                            </tr>
+                            <tr>
+                                <td>Activity logged in last 7 days</td>
+                                <td>15 pts</td>
+                            </tr>
+                            <tr>
+                                <td>Next step + current close date</td>
+                                <td>15 pts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Display:</strong> Real-time dashboard showing each AM's average score across all open deals</p>
+
+                    <h4>Incentive Tiers (Positive Reinforcement)</h4>
+                    <table class="content-table">
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Score Range</th>
+                                <th>Benefits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>🥉 Bronze</strong></td>
+                                <td>60-74%</td>
+                                <td>Standard quote SLA: 2 business days</td>
+                            </tr>
+                            <tr>
+                                <td><strong>🥈 Silver</strong></td>
+                                <td>75-89%</td>
+                                <td>Priority quote SLA: 24 hours<br>Dedicated OM support for complex deals<br>Monthly shoutout in sales meeting</td>
+                            </tr>
+                            <tr>
+                                <td><strong>🥇 Gold</strong></td>
+                                <td>90-100%</td>
+                                <td>Same-day quote turnaround<br>Finance fast-track for contract execution<br>Quarterly reward: €300 gift card OR extra PTO day</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Team Component (Collective Goal)</h4>
+                    <div class="quote-box">
+                        <p style="color: var(--gray-600); margin: 0;"><strong>Quarterly Team Target:</strong> If entire team averages 80%+ for the quarter → team dinner/event funded by company. Fosters peer accountability without blame.</p>
+                    </div>
+
+                    <h4>Visibility & Reinforcement</h4>
+                    <ul>
+                        <li><strong>Weekly Automated Email:</strong> "Your Revenue Ready Score: 87% (+3 vs. last week)"</li>
+                        <li><strong>Real-Time Slack Feedback:</strong> "🎯 [Deal Name] was revenue-ready! Processed in 4 hours. Nice work!"</li>
+                        <li><strong>Monthly Recognition:</strong> Top 3 performers celebrated in sales meeting</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h3>4. Outcome</h3>
+                    <p>This approach creates a win-win:</p>
+                    <ul>
+                        <li><strong>Sales closes faster:</strong> Gold tier gets same-day quote turnaround</li>
+                        <li><strong>RevOps gets clean data:</strong> Without nagging or manual enforcement</li>
+                        <li><strong>Finance stops escalating:</strong> Fewer invoice errors and billing delays</li>
+                        <li><strong>Customer experience improves:</strong> Faster quotes = faster deals</li>
+                    </ul>
+                    <p><strong>Clean CRM becomes a by-product of speed, not an administrative burden.</strong></p>
+                </div>
+
+                <div class="insight-box">
+                    <strong>Why This Works:</strong> Gold tier benefit (same-day quotes) directly solves AM's pain point. Loss aversion kicks in—AMs don't want to drop from Gold to Silver. "Revenue Ready" is proactive language vs. "CRM Compliance" (punitive). Team goal (80%+ quarterly average) creates peer accountability without toxic competition. Automated scoring = zero manual RevOps effort to maintain.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // ESC key to return to hub
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                showPage('hub');
+            }
+        });
+    </script>
+</body>
+</html>
