@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOYABA Case Study | Vaja Gogitidze</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0a1428;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            height: 6px;
+            background: linear-gradient(90deg, #facc15, #22d3ee);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* MAIN PAGE */
+        #mainPage {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .main-page .label {
+            color: #22d3ee;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .main-page .title {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 30px;
+        }
+
+        .main-page .title .line1 { color: #fff; }
+        .main-page .title .line2 {
+            display: inline-block;
+            background: #facc15;
+            color: #0a0a0a;
+            padding: 5px 20px;
+        }
+        .main-page .title .line3 { color: #fff; }
+
+        .main-page .subtitle {
+            color: #9ca3af;
+            font-size: 18px;
+            margin-bottom: 50px;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            color: #0a0a0a;
+            border: none;
+            padding: 18px 60px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .start-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(250, 204, 21, 0.3);
+        }
+
+        .info-row {
+            display: flex;
+            gap: 80px;
+            margin-top: 60px;
+        }
+
+        .info-item { text-align: center; }
+        .info-item .label {
+            color: #22d3ee;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .info-item .value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* SELECTION PAGE */
+        #selectionPage {
+            flex-direction: column;
+            padding: 60px 40px;
+            padding-top: 80px;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(13, 31, 45, 0.9);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            color: #22d3ee;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            background: rgba(34, 211, 238, 0.1);
+            border-color: #22d3ee;
+        }
+
+        .selection-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .selection-header h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .selection-header h1 span {
+            background: #facc15;
+            color: #0a0a0a;
+            padding: 2px 15px;
+        }
+
+        .selection-header p {
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .selection-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .selection-card {
+            background: #0d1f2d;
+            border: 2px solid rgba(34, 211, 238, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #facc15, #22d3ee);
+        }
+
+        .selection-card:hover {
+            border-color: #22d3ee;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(34, 211, 238, 0.15);
+        }
+
+        .selection-card .part-label {
+            color: #22d3ee;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .selection-card h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .selection-card h2 span {
+            background: #facc15;
+            color: #0a0a0a;
+            padding: 2px 10px;
+        }
+
+        .selection-card .description {
+            color: #9ca3af;
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .selection-card .topics {
+            list-style: none;
+        }
+
+        .selection-card .topics li {
+            color: #d1d5db;
+            font-size: 13px;
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        .selection-card .topics li:last-child { border-bottom: none; }
+
+        .selection-card .topics li::before {
+            content: "→";
+            color: #22d3ee;
+            position: absolute;
+            left: 0;
+        }
+
+        .selection-card .enter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 25px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 8px;
+            margin-top: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .selection-card .enter-btn:hover { transform: scale(1.05); }
+
+        /* CONTENT PAGES */
+        #part1Page, #part2Page {
+            flex-direction: column;
+            padding: 30px 50px;
+            padding-top: 70px;
+        }
+
+        .content-header { margin-bottom: 30px; }
+
+        .content-header .breadcrumb {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .content-header .breadcrumb span { color: #22d3ee; }
+
+        .content-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .content-header h1 span {
+            background: #facc15;
+            color: #0a0a0a;
+            padding: 2px 12px;
+        }
+
+        .content-header .subtitle {
+            color: #9ca3af;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .content-body {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section {
+            background: #0d1f2d;
+            border: 1px solid rgba(34, 211, 238, 0.15);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #22d3ee;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+        }
+
+        .section-title .icon { font-size: 20px; }
+
+        .section p {
+            color: #e5e7eb;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .section p strong { color: #fff; }
+
+        .bullet-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .bullet-list li {
+            color: #d1d5db;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "→";
+            color: #22d3ee;
+            position: absolute;
+            left: 0;
+        }
+
+        .bullet-list li strong { color: #fff; }
+
+        .insight-box {
+            background: rgba(10, 20, 40, 0.5);
+            border-left: 4px solid #facc15;
+            padding: 18px 20px;
+            margin: 18px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .insight-box p {
+            color: #fff;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .insight-box .label {
+            color: #facc15;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .finding-box {
+            background: rgba(10, 20, 40, 0.5);
+            border-left: 4px solid #22c55e;
+            padding: 18px 20px;
+            margin: 18px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .finding-box p {
+            color: #fff;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .finding-box .label {
+            color: #22c55e;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .comparison-table th {
+            background: #1a3a4a;
+            color: #22d3ee;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.1);
+            text-align: center;
+        }
+
+        .comparison-table td:first-child {
+            color: #9ca3af;
+            text-align: left;
+        }
+
+        .comparison-table .highlight {
+            background: rgba(34, 211, 238, 0.1);
+            color: #fff;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: #facc15;
+            color: #0a0a0a;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.15);
+            color: #e5e7eb;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(34, 211, 238, 0.05);
+        }
+
+        .data-table .highlight-row td {
+            background: rgba(34, 211, 238, 0.15);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .takeaways-box {
+            background: #facc15;
+            border-radius: 14px;
+            padding: 25px 30px;
+            margin-top: 25px;
+        }
+
+        .takeaways-box h3 {
+            color: #0a0a0a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .takeaways-box ol {
+            list-style: none;
+            padding: 0;
+        }
+
+        .takeaways-box li {
+            color: #0a0a0a;
+            font-size: 14px;
+            padding: 10px 0;
+            padding-left: 35px;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .takeaways-box li .num {
+            position: absolute;
+            left: 0;
+            background: #0a0a0a;
+            color: #facc15;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .phase-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 18px;
+            padding: 15px;
+            background: rgba(10, 20, 40, 0.3);
+            border-radius: 10px;
+        }
+
+        .phase-num {
+            background: #facc15;
+            color: #0a0a0a;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .phase-content h4 {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .phase-content .duration {
+            display: inline-block;
+            background: #22d3ee;
+            color: #0a0a0a;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
+        .phase-content p {
+            color: #9ca3af;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .tool-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(10, 20, 40, 0.4);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tool-item .name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .tool-item .desc {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 5px;
+        }
+
+        .badge.keep {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .badge.evaluate {
+            background: rgba(249, 115, 22, 0.2);
+            color: #f97316;
+        }
+
+        .calc-step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+            padding: 15px;
+            background: rgba(10, 20, 40, 0.3);
+            border-radius: 10px;
+        }
+
+        .calc-step .step-num {
+            background: #facc15;
+            color: #0a0a0a;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .calc-step .step-content h5 {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .calc-step .step-content p {
+            color: #9ca3af;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .calc-step .step-content .highlight-num {
+            color: #22d3ee;
+            font-weight: 700;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            border-radius: 14px;
+            padding: 25px 30px;
+            margin: 20px 0;
+        }
+
+        .result-box h4 {
+            color: #0a0a0a;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .result-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .result-box li {
+            color: #0a0a0a;
+            font-size: 14px;
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .result-box li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        code {
+            background: rgba(34, 211, 238, 0.15);
+            color: #22d3ee;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+        }
+
+        @media (max-width: 1024px) {
+            .selection-cards, .two-col {
+                grid-template-columns: 1fr;
+            }
+            .main-page .title { font-size: 48px; }
+            .info-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+            #part1Page, #part2Page {
+                padding: 20px;
+                padding-top: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar"></div>
+
+    <!-- MAIN PAGE -->
+    <div class="page main-page active" id="mainPage">
+        <div class="label">● SENIOR REVOPS CONSULTANT CASE STUDY</div>
+        <h1 class="title">
+            <div class="line1">REVENUE</div>
+            <div class="line2">OPERATIONS</div>
+            <div class="line3">CASE STUDY</div>
+        </h1>
+        <p class="subtitle">GTM Architecture Evaluation & Data Analysis</p>
+        <button class="start-button" onclick="showPage('selectionPage')">Start →</button>
+        <div class="info-row">
+            <div class="info-item">
+                <div class="label">CANDIDATE</div>
+                <div class="value">Vaja Gogitidze</div>
+            </div>
+            <div class="info-item">
+                <div class="label">POSITION</div>
+                <div class="value">Senior RevOps Consultant</div>
+            </div>
+            <div class="info-item">
+                <div class="label">DATE</div>
+                <div class="value">January 2026</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SELECTION PAGE -->
+    <div class="page" id="selectionPage">
+        <button class="back-button" onclick="showPage('mainPage')">← Back to Home</button>
+        <div class="selection-cards">
+            <div class="selection-card" onclick="showPage('part1Page')">
+                <div class="part-label">PART 1</div>
+                <h2>Conceptual <span>Analysis</span></h2>
+                <p class="description">GTM Architecture Evaluation & CRM Decision Foundation for a 200-employee B2B SaaS company.</p>
+                <button class="enter-btn">Enter Part 1 →</button>
+            </div>
+            <div class="selection-card" onclick="showPage('part2Page')">
+                <div class="part-label">PART 2</div>
+                <h2>Operative <span>Data Analysis</span></h2>
+                <p class="description">Data-driven analysis of companies and contacts to answer key GTM questions.</p>
+                <button class="enter-btn">Enter Part 2 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PART 1 PAGE -->
+    <div class="page" id="part1Page">
+        <button class="back-button" onclick="showPage('selectionPage')">← Back to Selection</button>
+        <div class="content-header">
+            <div class="breadcrumb">Case Study / <span>Part 1: Conceptual</span></div>
+            <h1>GTM ARCHITECTURE <span>EVALUATION</span></h1>
+            <p class="subtitle">CRM Decision Foundation for 200-Employee B2B SaaS</p>
+        </div>
+        <div class="content-body">
+            <!-- Topics Overview -->
+            <div class="section" style="background: linear-gradient(135deg, #0d1f2d, #0a1428); border-color: rgba(34, 211, 238, 0.3);">
+                <div class="section-title"><span class="icon">📑</span> What's Covered in Part 1</div>
+                <ul class="bullet-list">
+                    <li>Executive Summary & Assumptions</li>
+                    <li>Current Architecture Assessment</li>
+                    <li>Salesforce vs HubSpot Comparison</li>
+                    <li>Existing Tools Evaluation</li>
+                    <li>Project Approach & Timeline</li>
+                    <li>Key Risks & Quick Wins</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">📋</span> Executive Summary</div>
+                <p>This document outlines a strategic approach to evaluating and implementing a major CRM (Salesforce or HubSpot) for a <strong>200-employee B2B SaaS company</strong> with an outdated, partly self-built GoToMarket architecture.</p>
+                <p>The analysis reframes this initiative not as a simple CRM replacement project, but as a comprehensive <strong>GTM architecture normalization effort</strong> that establishes clear system boundaries, data ownership, and integration principles.</p>
+                <div class="insight-box">
+                    <span class="label">💡 Key Insight:</span>
+                    <p>The goal is not to choose the "best" CRM, but to redefine system boundaries so that the CRM becomes a stable orchestration layer rather than another monolith.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">📝</span> Explicit Assumptions</div>
+                <ul class="bullet-list">
+                    <li>The company operates a <strong>hybrid GTM motion</strong> (marketing-led acquisition with sales-assisted conversion)</li>
+                    <li>The current CRM (<strong>Bitrix24</strong>) is functionally overloaded, handling sales, partner management, CS, task management, and calling</li>
+                    <li>GTM processes are operationally active but <strong>architecturally misaligned</strong></li>
+                    <li>The Admin backend is custom-built and connected to MySQL</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">💭</span> First Thoughts</div>
+                <div class="insight-box">
+                    <span class="label">💡 Core Insight:</span>
+                    <p>This is not primarily a CRM replacement project—it's a <strong>GTM architecture normalization project</strong>.</p>
+                </div>
+                <p>The sketch reveals a GTM stack that has grown organically. Systems were added to solve local problems, boundaries have blurred, and the CRM absorbed responsibilities it should never have owned.</p>
+                <div class="two-col" style="margin-top: 20px;">
+                    <div>
+                        <ul class="bullet-list">
+                            <li><strong>Bitrix24 Overload:</strong> Handles sales process, partner management, customer success, task management, activity logging, webforms, and calling—classic 'CRM sprawl'</li>
+                            <li><strong>Backend Dependencies:</strong> Admin backend manages billing, subscription, CPQ, payments, and transactional emails—all connected to MySQL</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="bullet-list">
+                            <li><strong>Fragmented Communication:</strong> Marketing split between WordPress, Mailchimp, and CRM—creating attribution gaps</li>
+                            <li><strong>Support Separation:</strong> Zammad handles support ticketing independently—requires CRM integration evaluation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">⚖️</span> Salesforce vs HubSpot Comparison</div>
+                <table class="comparison-table">
+                    <tr><th style="text-align: left;">Criteria</th><th>HubSpot</th><th>Salesforce</th></tr>
+                    <tr><td>Time-to-Value</td><td class="highlight">✓ Faster implementation</td><td>Longer adoption curve</td></tr>
+                    <tr><td>Marketing Integration</td><td class="highlight">✓ Fully integrated Hub</td><td>Marketing Cloud separate</td></tr>
+                    <tr><td>CPQ Capabilities</td><td>May need external tool</td><td class="highlight">✓ Native CPQ available</td></tr>
+                    <tr><td>Enterprise Scalability</td><td>Strong for mid-market</td><td class="highlight">✓ Enterprise-proven</td></tr>
+                    <tr><td>Total Cost of Ownership</td><td class="highlight">✓ Lower, predictable</td><td>Higher + consulting fees</td></tr>
+                    <tr><td>Integration Ecosystem</td><td class="highlight">✓ Native + Ops Hub</td><td>AppExchange needed</td></tr>
+                </table>
+                <div class="insight-box">
+                    <span class="label">💡 Initial Lean:</span>
+                    <p>HubSpot's simpler orchestration model and native marketing may offer faster time-to-value. Requires validation during discovery.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">🔧</span> Existing Tools Assessment</div>
+                <p>Not all existing tools need replacement:</p>
+                <div class="tool-item"><div><span class="name">Zammad</span><br><span class="desc">Support ticketing - integrate with CRM</span></div><span class="badge keep">KEEP</span></div>
+                <div class="tool-item"><div><span class="name">3CX</span><br><span class="desc">Compare with CRM native calling</span></div><span class="badge evaluate">EVALUATE</span></div>
+                <div class="tool-item"><div><span class="name">WebValid</span><br><span class="desc">Data enrichment - can stay standalone</span></div><span class="badge keep">KEEP</span></div>
+                <div class="tool-item"><div><span class="name">GA4 / Matomo</span><br><span class="desc">Analytics - integrate for attribution</span></div><span class="badge keep">KEEP</span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">📅</span> Project Approach</div>
+                <div class="phase-item"><div class="phase-num">1</div><div class="phase-content"><h4>Current-State Assessment <span class="duration">2-3 WEEKS</span></h4><p>Map GTM processes, identify coupling, document integrations</p></div></div>
+                <div class="phase-item"><div class="phase-num">2</div><div class="phase-content"><h4>Target Architecture Definition <span class="duration">2-3 WEEKS</span></h4><p>Define responsibilities, specify data ownership, design CPQ decoupling</p></div></div>
+                <div class="phase-item"><div class="phase-num">3</div><div class="phase-content"><h4>CRM Evaluation <span class="duration">3-4 WEEKS</span></h4><p>Assess Salesforce vs HubSpot, Mailchimp replacement, calculate TCO</p></div></div>
+                <div class="phase-item"><div class="phase-num">4</div><div class="phase-content"><h4>Decision & Roadmap <span class="duration">2 WEEKS</span></h4><p>Final recommendation, implementation plan, risk mitigation</p></div></div>
+            </div>
+
+            <div class="takeaways-box">
+                <h3>KEY TAKEAWAYS</h3>
+                <ol>
+                    <li><span class="num">1</span>This is a GTM normalization project, not just a CRM replacement</li>
+                    <li><span class="num">2</span>Decoupling CPQ/subscription from Admin backend is a prerequisite</li>
+                    <li><span class="num">3</span>The CRM should orchestrate, not own, commercial logic</li>
+                    <li><span class="num">4</span>HubSpot = faster time-to-value; Salesforce = deeper enterprise features</li>
+                    <li><span class="num">5</span>Phased approach with clear boundaries reduces migration risk</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- PART 2 PAGE -->
+    <div class="page" id="part2Page">
+        <button class="back-button" onclick="showPage('selectionPage')">← Back to Selection</button>
+        <div class="content-header">
+            <div class="breadcrumb">Case Study / <span>Part 2: Operative</span></div>
+            <h1>DATA <span>ANALYSIS</span></h1>
+            <p class="subtitle">Companies & Contacts Analysis for GTM Decision Making</p>
+        </div>
+        <div class="content-body">
+            <!-- Topics Overview -->
+            <div class="section" style="background: linear-gradient(135deg, #0d1f2d, #0a1428); border-color: rgba(34, 211, 238, 0.3);">
+                <div class="section-title"><span class="icon">📑</span> What's Covered in Part 2</div>
+                <ul class="bullet-list">
+                    <li>Scope & Data Sources</li>
+                    <li>Global Assumptions</li>
+                    <li>Free Trial vs Demo Conversion</li>
+                    <li>Weekly Cohort Evaluation</li>
+                    <li>Calculation Methodology</li>
+                    <li>Key Findings & Implications</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">📁</span> Scope & Data</div>
+                <div class="two-col">
+                    <div>
+                        <p><strong>Data Sources:</strong></p>
+                        <ul class="bullet-list">
+                            <li><code>companies.csv</code> - Company records with lifecycle dates</li>
+                            <li><code>contacts.csv</code> - Contact records with CTA data</li>
+                        </ul>
+                        <p><strong>Primary Reporting Object:</strong> Company (Account)</p>
+                    </div>
+                    <div>
+                        <p><strong>Lifecycle Stages:</strong></p>
+                        <ul class="bullet-list">
+                            <li>Lead → SQL → Customer</li>
+                            <li>All stages defined at company level</li>
+                            <li>Company lifecycle dates are system of record</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">📋</span> Global Assumptions</div>
+                <ul class="bullet-list">
+                    <li>Company lifecycle dates are the <strong>system of record</strong></li>
+                    <li>A company may have <strong>multiple contacts</strong> and interactions</li>
+                    <li>"First CTA" reflects <strong>initial buying intent</strong></li>
+                    <li>Results show <strong>correlation, not causation</strong></li>
+                    <li>Goal is <strong>operational decision-making</strong>, not academic proof</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">🔬</span> 1a. Free Trial vs Demo – Lead to Customer Conversion</div>
+                <div class="insight-box">
+                    <span class="label">❓ Question:</span>
+                    <p>Is a prospect company more likely to convert from Lead to Customer if they first have a free trial or first have a demo?</p>
+                </div>
+                <p><strong>Analytical Approach:</strong></p>
+                <ul class="bullet-list">
+                    <li>Identify first recorded CTA per company (first demo booked date, first free trial signup date)</li>
+                    <li>Attribute company to <strong>Demo-first</strong> or <strong>Trial-first</strong></li>
+                    <li>Compare Lead → Customer conversion rates at company level</li>
+                </ul>
+                <p><strong>Key Assumptions:</strong></p>
+                <ul class="bullet-list">
+                    <li>CTA choice reflects buyer self-selection and intent</li>
+                    <li>Demo-first companies typically show higher readiness to buy</li>
+                    <li>Trial-first companies include earlier-stage and exploratory interest</li>
+                </ul>
+                <div class="finding-box">
+                    <span class="label">📊 Finding:</span>
+                    <p><strong>Demo-first companies are more likely to convert from Lead to Customer than trial-first companies.</strong></p>
+                </div>
+                <p><strong>Interpretation:</strong> The difference is driven by <strong>buyer intent</strong>, not inherent superiority of demos. Trial-first generates scale but lower conversion efficiency.</p>
+                <div class="result-box">
+                    <h4>CONCLUSION</h4>
+                    <ul>
+                        <li><strong>Demo-first</strong> = higher conversion efficiency</li>
+                        <li><strong>Trial-first</strong> = broader top-of-funnel volume</li>
+                        <li>Optimal GTM requires <strong>differentiated routing</strong>, not choosing one motion</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">📈</span> 1b. Weekly Cohort Evaluation – SQL Conversion Timing</div>
+                <div class="insight-box">
+                    <span class="label">❓ Question:</span>
+                    <p>Given cohort week X, after how many weeks (X + n) should week X be fully evaluated, assuming 90% of all leads that convert to SQL should have already converted?</p>
+                </div>
+                <p><strong>Why This Matters:</strong></p>
+                <ul class="bullet-list">
+                    <li>SQL conversions are <strong>time-distributed</strong>, not instantaneous</li>
+                    <li>Evaluating cohorts too early <strong>understates performance</strong></li>
+                    <li>Evaluating too late <strong>slows experimentation</strong> and decision-making</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">🎯</span> Reference Population</div>
+                <p>To learn typical conversion timing, we analyze a <strong>stable historical segment</strong>:</p>
+                <ul class="bullet-list">
+                    <li><strong>582 companies</strong></li>
+                    <li><strong>50+ employees</strong></li>
+                    <li>Created between <strong>2020–2023</strong></li>
+                    <li>That eventually <strong>converted to SQL</strong></li>
+                </ul>
+                <p>This ensures sufficient sample size, mature conversion data, and comparable buying behavior.</p>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">🔢</span> Calculation Steps</div>
+                <div class="calc-step"><div class="step-num">1</div><div class="step-content"><h5>Identify all companies with a populated Became a SQL date</h5></div></div>
+                <div class="calc-step"><div class="step-num">2</div><div class="step-content"><h5>Calculate time-to-SQL per company</h5><p><code>Create date</code> → <code>Became a SQL date</code>, converted into weeks</p></div></div>
+                <div class="calc-step"><div class="step-num">3</div><div class="step-content"><h5>Sort companies from fastest to slowest SQL conversion</h5></div></div>
+                <div class="calc-step"><div class="step-num">4</div><div class="step-content"><h5>Build a cumulative SQL conversion distribution over time</h5></div></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">📊</span> Cumulative SQL Conversion Distribution</div>
+                <table class="data-table">
+                    <tr><th>Weeks Since Creation</th><th>Cumulative % of SQL Conversions</th></tr>
+                    <tr><td>4 weeks</td><td>~55%</td></tr>
+                    <tr><td>8 weeks</td><td>~78%</td></tr>
+                    <tr><td>10 weeks</td><td>~86%</td></tr>
+                    <tr class="highlight-row"><td>12 weeks</td><td>~90% ✔</td></tr>
+                    <tr><td>16 weeks</td><td>~95%</td></tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">🔍</span> Finding</div>
+                <div class="finding-box">
+                    <span class="label">📊 Finding:</span>
+                    <p>The <strong>90% threshold is reached at approximately 12 weeks (~85 days)</strong>. After week 12, additional SQL conversions occur only marginally, indicating that the conversion curve has largely flattened.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title"><span class="icon">✅</span> Conclusion</div>
+                <div class="result-box">
+                    <h4>CONCLUSION</h4>
+                    <ul>
+                        <li>A cohort week X should be considered <strong>fully evaluated after X + 12 weeks</strong></li>
+                        <li>This captures the <strong>vast majority of SQL signal</strong></li>
+                        <li>While avoiding <strong>premature or delayed evaluation</strong></li>
+                    </ul>
+                </div>
+                <p style="margin-top: 15px;">Although the exact 90th percentile occurs slightly after week 12, using a <strong>12-week evaluation window</strong> provides a robust and operationally practical standard for cohort analysis.</p>
+                
+                <div class="insight-box" style="margin-top: 20px;">
+                    <span class="label">🎯 Key Takeaway:</span>
+                    <p>Weekly lead cohorts should be evaluated at <strong>X + 12 weeks</strong> to capture ~90% of all SQL conversions and enable confident, timely GTM decisions.</p>
+                </div>
+            </div>
+
+            <div class="takeaways-box">
+                <h3>KEY FINDINGS</h3>
+                <ol>
+                    <li><span class="num">1</span>Demo-first companies convert more efficiently than trial-first companies</li>
+                    <li><span class="num">2</span>Trial-first motion remains critical for scale but requires qualification</li>
+                    <li><span class="num">3</span>Weekly lead cohorts should be evaluated at X + 12 weeks to capture 90% of SQL signal</li>
+                    <li><span class="num">4</span>These rules enable faster experimentation, cleaner reporting, and better GTM decisions</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
