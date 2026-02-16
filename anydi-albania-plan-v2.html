@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANY DI SunCover — Albania Market Entry Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C5A04E;
+    --gold-light: #E8D5A0;
+    --black: #0A0A0A;
+    --charcoal: #1A1A1A;
+    --warm-gray: #2A2826;
+    --cream: #FAF7F0;
+    --cream-dark: #EDE8DA;
+    --accent: #8B6914;
+    --sea-blue: #1B6B93;
+    --sea-light: #A8D5E2;
+    --riviera: #0E4D64;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--black);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  .slide {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px) { .slide { padding: 40px 24px; } }
+
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+  .slide-number {
+    position: absolute;
+    top: 40px;
+    right: 60px;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+
+  .nav-dots {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(197, 160, 78, 0.25);
+    border: 1px solid var(--gold);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .nav-dot:hover, .nav-dot.active {
+    background: var(--gold);
+    transform: scale(1.3);
+  }
+
+  /* ===== SLIDE 1: TITLE ===== */
+  .slide-title {
+    background: var(--black);
+    text-align: center;
+  }
+
+  .slide-title::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(197,160,78,0.08) 0%, transparent 70%);
+  }
+
+  .brand-tag {
+    font-size: 13px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 30px;
+    font-weight: 500;
+    animation: fadeDown 1s ease 0.3s both;
+  }
+
+  .main-title {
+    font-size: clamp(42px, 6vw, 80px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    animation: fadeUp 1s ease 0.5s both;
+  }
+
+  .main-title .gold { color: var(--gold); }
+
+  .subtitle {
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 300;
+    color: var(--gold-light);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+    animation: fadeUp 1s ease 0.7s both;
+  }
+
+  .divider-line {
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto 30px;
+    animation: expandWidth 1s ease 0.9s both;
+  }
+
+  .meta-info {
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: rgba(250,247,240,0.4);
+    text-transform: uppercase;
+    animation: fadeUp 1s ease 1.1s both;
+  }
+
+  /* ===== COMMON ===== */
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+
+  .slide h2 {
+    font-size: clamp(30px, 4vw, 52px);
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.15;
+  }
+
+  .content-text {
+    font-size: 17px;
+    line-height: 1.8;
+    color: rgba(250,247,240,0.8);
+    max-width: 800px;
+    font-weight: 300;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+    max-width: 900px;
+  }
+
+  .feature-card {
+    background: rgba(197,160,78,0.06);
+    border: 1px solid rgba(197,160,78,0.15);
+    border-radius: 12px;
+    padding: 28px;
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover {
+    background: rgba(197,160,78,0.12);
+    transform: translateY(-4px);
+    border-color: rgba(197,160,78,0.3);
+  }
+
+  .feature-card .icon { font-size: 28px; margin-bottom: 14px; }
+
+  .feature-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: var(--gold-light);
+  }
+
+  .feature-card p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(250,247,240,0.6);
+    font-weight: 300;
+  }
+
+  /* ===== SLIDE 3: MARKET ===== */
+  .slide-market {
+    background: linear-gradient(135deg, var(--riviera) 0%, var(--black) 100%);
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 50px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+
+  .stat-block { text-align: left; }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: rgba(250,247,240,0.6);
+    margin-top: 8px;
+    letter-spacing: 1px;
+    font-weight: 300;
+  }
+
+  .beach-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .beach-tag {
+    background: rgba(168,213,226,0.12);
+    border: 1px solid rgba(168,213,226,0.25);
+    border-radius: 30px;
+    padding: 10px 22px;
+    font-size: 14px;
+    color: var(--sea-light);
+    font-weight: 400;
+    transition: all 0.3s ease;
+  }
+
+  .beach-tag:hover { background: rgba(168,213,226,0.22); transform: scale(1.05); }
+
+  /* ===== TIMELINE ===== */
+  .timeline {
+    position: relative;
+    margin-top: 40px;
+    padding-left: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), rgba(197,160,78,0.1));
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 36px;
+    padding-left: 30px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -33px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 20px rgba(197,160,78,0.3);
+  }
+
+  .timeline-phase {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .timeline-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--cream);
+  }
+
+  .timeline-desc {
+    font-size: 15px;
+    color: rgba(250,247,240,0.6);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ===== LOGISTICS ===== */
+  .logistics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 36px;
+    max-width: 1000px;
+  }
+
+  @media (max-width: 768px) { .logistics-grid { grid-template-columns: 1fr; } }
+
+  .logistics-box {
+    background: rgba(10,10,10,0.5);
+    border: 1px solid rgba(197,160,78,0.12);
+    border-radius: 16px;
+    padding: 32px;
+  }
+
+  .logistics-box h3 { font-size: 20px; margin-bottom: 16px; color: var(--gold-light); }
+
+  .logistics-box p, .logistics-box li {
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(250,247,240,0.7);
+    font-weight: 300;
+  }
+
+  .logistics-box ul { list-style: none; padding: 0; }
+
+  .logistics-box ul li { padding-left: 20px; position: relative; margin-bottom: 8px; }
+
+  .logistics-box ul li::before { content: '→'; position: absolute; left: 0; color: var(--gold); }
+
+  .highlight-box {
+    background: rgba(197,160,78,0.08);
+    border-left: 3px solid var(--gold);
+    padding: 20px 24px;
+    margin-top: 20px;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .highlight-box p { font-size: 15px; color: var(--gold-light); font-weight: 400; }
+
+  /* ===== STEPS ===== */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 36px;
+    max-width: 1000px;
+  }
+
+  .step-card {
+    background: rgba(250,247,240,0.03);
+    border: 1px solid rgba(197,160,78,0.1);
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .step-card:hover {
+    border-color: rgba(197,160,78,0.3);
+    background: rgba(250,247,240,0.06);
+    transform: translateY(-3px);
+  }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--gold);
+    opacity: 0.4;
+    margin-bottom: 10px;
+  }
+
+  .step-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: var(--cream);
+  }
+
+  .step-card p { font-size: 13px; color: rgba(250,247,240,0.5); line-height: 1.6; font-weight: 300; }
+
+  /* ===== FINANCIALS TABLE ===== */
+  .finance-table {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 800px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    border: 1px solid rgba(197,160,78,0.15);
+    overflow: hidden;
+  }
+
+  .finance-table th {
+    background: rgba(197,160,78,0.1);
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .finance-table td {
+    padding: 14px 24px;
+    font-size: 15px;
+    color: rgba(250,247,240,0.8);
+    border-bottom: 1px solid rgba(250,247,240,0.05);
+    font-weight: 300;
+  }
+
+  .finance-table tr:last-child td { border-bottom: none; }
+
+  .finance-table .total td {
+    color: var(--gold);
+    font-weight: 600;
+    background: rgba(197,160,78,0.06);
+    font-size: 16px;
+  }
+
+  .note {
+    margin-top: 24px;
+    font-size: 13px;
+    color: rgba(250,247,240,0.4);
+    font-style: italic;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  /* ===== POPUP CARDS ===== */
+  .popup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+    margin-top: 36px;
+    max-width: 1000px;
+  }
+
+  .popup-card {
+    background: rgba(250,247,240,0.03);
+    border: 1px solid rgba(197,160,78,0.12);
+    border-radius: 16px;
+    padding: 30px;
+    transition: all 0.4s ease;
+  }
+
+  .popup-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 8px 40px rgba(197,160,78,0.08);
+  }
+
+  .popup-card .card-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .popup-card h4 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 12px; }
+
+  .popup-card p { font-size: 14px; line-height: 1.7; color: rgba(250,247,240,0.6); font-weight: 300; }
+
+  /* ===== STAND DESIGN SLIDE ===== */
+  .stand-design-container {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    margin-top: 30px;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .stand-design-container { grid-template-columns: 1fr; }
+  }
+
+  .stand-visual {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    aspect-ratio: 4/3;
+    border-radius: 20px;
+    overflow: hidden;
+    background: linear-gradient(160deg, #e8dcc6 0%, #d4c5a0 30%, #c9b88a 60%, #bfa96f 100%);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(197,160,78,0.15);
+  }
+
+  .stand-visual svg { width: 100%; height: 100%; }
+
+  .stand-specs { list-style: none; padding: 0; }
+
+  .stand-specs li {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(197,160,78,0.1);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .stand-specs li:last-child { border-bottom: none; }
+
+  .spec-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(197,160,78,0.1);
+    border: 1px solid rgba(197,160,78,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .spec-text h5 {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+
+  .spec-text p {
+    font-size: 13px;
+    color: rgba(250,247,240,0.5);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* ===== VENUE CARDS ===== */
+  .venue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 36px;
+    max-width: 1100px;
+  }
+
+  .venue-card {
+    background: rgba(250,247,240,0.03);
+    border: 1px solid rgba(197,160,78,0.1);
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .venue-card:hover {
+    border-color: rgba(197,160,78,0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+
+  .venue-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(197,160,78,0.08);
+  }
+
+  .venue-type {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .venue-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .venue-location {
+    font-size: 13px;
+    color: rgba(250,247,240,0.4);
+    font-weight: 300;
+  }
+
+  .venue-body {
+    padding: 16px 24px 22px;
+  }
+
+  .venue-body p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(250,247,240,0.6);
+    font-weight: 300;
+  }
+
+  .venue-tag {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .tag-premium { background: rgba(197,160,78,0.15); color: var(--gold-light); }
+  .tag-resort { background: rgba(27,107,147,0.15); color: var(--sea-light); }
+  .tag-luxury { background: rgba(139,105,20,0.2); color: #D4B96A; }
+
+  /* ===== EXPANSION ===== */
+  .expansion-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    margin-top: 36px;
+    max-width: 1000px;
+  }
+
+  @media (max-width: 768px) { .expansion-cols { grid-template-columns: 1fr; } }
+
+  .channel-card {
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(197,160,78,0.1);
+  }
+
+  .channel-card:last-child { border-bottom: none; }
+
+  .channel-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    margin-bottom: 8px;
+    color: var(--gold-light);
+  }
+
+  .channel-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(250,247,240,0.6);
+    font-weight: 300;
+  }
+
+  /* ===== CLOSING ===== */
+  .slide-closing { text-align: center; }
+
+  .slide-closing::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(197,160,78,0.06) 0%, transparent 60%);
+  }
+
+  .closing-title {
+    font-size: clamp(34px, 5vw, 64px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+
+  .closing-sub {
+    font-size: 20px;
+    color: var(--gold-light);
+    font-weight: 300;
+    max-width: 500px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes expandWidth { from { width: 0; } to { width: 80px; } }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .key-hint {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: rgba(250,247,240,0.2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    z-index: 100;
+    pointer-events: none;
+    transition: opacity 0.5s;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-dots" id="navDots"></div>
+<div class="key-hint" id="keyHint">Scroll or use arrow keys to navigate</div>
+
+<!-- SLIDE 1: TITLE -->
+<section class="slide slide-title" id="slide-0">
+  <div class="slide-number">01 / 11</div>
+  <div class="brand-tag">Business Plan & Market Entry Strategy</div>
+  <h1 class="main-title">ANY DI <span class="gold">SunCover</span><br>Albania Launch</h1>
+  <p class="subtitle">Bringing Munich's luxury eyewear accessory to Albania's finest resorts — from beach pop-ups to nationwide retail.</p>
+  <div class="divider-line"></div>
+  <p class="meta-info">Prepared — 2026 &nbsp;·&nbsp; Confidential</p>
+</section>
+
+<!-- SLIDE 2: ABOUT ANY DI -->
+<section class="slide" style="background:var(--charcoal)" id="slide-1">
+  <div class="slide-number">02 / 11</div>
+  <div class="section-label reveal">The Brand</div>
+  <h2 class="reveal">What is ANY DI <span style="color:var(--gold)">SunCover?</span></h2>
+  <p class="content-text reveal">ANY DI is a Munich-based luxury accessories brand founded by designer Anne Dickhardt in 2015. Their signature product — the design-patented SunCover — is a revolutionary slim eyeglass cover that doubles as a stylish bag tag. Crafted with vegan leather, 24-carat gold-plated hardware, and soft microfiber lining, it protects all shapes and sizes of glasses while looking stunning.</p>
+  <div class="feature-grid reveal">
+    <div class="feature-card">
+      <div class="icon">✦</div>
+      <h4>Design Patented</h4>
+      <p>Unique owl-shaped silhouette, globally protected by numerous patents.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">◈</div>
+      <h4>24K Gold Details</h4>
+      <p>Real gold-plated metal elements and snap-button closure for luxury appeal.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">◎</div>
+      <h4>Universal Fit</h4>
+      <p>Fits all glasses shapes — round, cat-eye, angular, reading, or sunglasses.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">▲</div>
+      <h4>€79–€179 Retail</h4>
+      <p>Premium positioning with strong margin potential at EU retail prices.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: MARKET OPPORTUNITY -->
+<section class="slide slide-market" id="slide-2">
+  <div class="slide-number">03 / 11</div>
+  <div class="section-label reveal">Market Opportunity</div>
+  <h2 class="reveal">Albania's Booming <span style="color:var(--sea-light)">Riviera Tourism</span></h2>
+  <p class="content-text reveal">Albania is Europe's fastest-growing beach destination. The Riviera attracts millions of tourists each summer — affluent visitors from across Europe drawn to crystal-clear Ionian waters. A luxury sunglasses accessory fits perfectly in this context.</p>
+  <div class="stat-row reveal">
+    <div class="stat-block"><div class="stat-number">10M+</div><div class="stat-label">Tourist arrivals projected 2027</div></div>
+    <div class="stat-block"><div class="stat-number">450km</div><div class="stat-label">Adriatic & Ionian coastline</div></div>
+    <div class="stat-block"><div class="stat-number">300+</div><div class="stat-label">Sunny days per year</div></div>
+  </div>
+  <div class="beach-list reveal">
+    <span class="beach-tag">Ksamil</span>
+    <span class="beach-tag">Saranda</span>
+    <span class="beach-tag">Vlora</span>
+    <span class="beach-tag">Dhermi</span>
+    <span class="beach-tag">Himara</span>
+    <span class="beach-tag">Durres</span>
+    <span class="beach-tag">Shengjin</span>
+    <span class="beach-tag">Borsh</span>
+  </div>
+</section>
+
+<!-- SLIDE 4: BUSINESS STRATEGY -->
+<section class="slide" style="background:var(--black)" id="slide-3">
+  <div class="slide-number">04 / 11</div>
+  <div class="section-label reveal">Go-To-Market Strategy</div>
+  <h2 class="reveal">Three-Phase <span style="color:var(--gold)">Market Entry</span></h2>
+  <div class="timeline reveal">
+    <div class="timeline-item">
+      <div class="timeline-phase">Phase 1 — Spring 2027</div>
+      <div class="timeline-title">Company Setup & First Order</div>
+      <div class="timeline-desc">Register LLC in Albania. Negotiate B2B wholesale terms with ANY DI Munich. Place initial inventory order of 200–400 SunCovers. Arrange logistics Germany → Albania.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-phase">Phase 2 — Summer 2027</div>
+      <div class="timeline-title">Resort & Beach Pop-Up Shops</div>
+      <div class="timeline-desc">Launch branded pop-up stands at premium resorts and beach clubs — Kep Merli, Meliá Durres, Marina Bay Vlora, plus Saranda and Ksamil beach hotspots. Target both Albanian and international tourists with live product demos.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-phase">Phase 3 — Fall 2027 Onward</div>
+      <div class="timeline-title">Retail Expansion</div>
+      <div class="timeline-desc">Leverage summer brand recognition to place SunCovers in optician shops, luxury boutiques, hotel gift shops, and eyewear retailers across Tirana, Saranda, Vlora, and Durrës.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: STAND DESIGN -->
+<section class="slide" style="background:linear-gradient(160deg, var(--black) 0%, #1a1510 100%)" id="slide-4">
+  <div class="slide-number">05 / 11</div>
+  <div class="section-label reveal">Pop-Up Stand Concept</div>
+  <h2 class="reveal">Beach Stand <span style="color:var(--gold)">Design</span></h2>
+
+  <div class="stand-design-container reveal">
+    <div class="stand-visual">
+      <svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg">
+        <!-- Sky gradient -->
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#87CEEB" stop-opacity="0.4"/>
+            <stop offset="60%" stop-color="#E8D5A0" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#D4C5A0" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E8DCC6"/>
+            <stop offset="100%" stop-color="#D4C5A0"/>
+          </linearGradient>
+          <linearGradient id="standBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0A0A0A"/>
+            <stop offset="100%" stop-color="#1A1A1A"/>
+          </linearGradient>
+          <linearGradient id="goldAccent" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#8B6914"/>
+            <stop offset="50%" stop-color="#C5A04E"/>
+            <stop offset="100%" stop-color="#8B6914"/>
+          </linearGradient>
+          <filter id="shadow">
+            <feDropShadow dx="4" dy="8" stdDeviation="8" flood-opacity="0.25"/>
+          </filter>
+        </defs>
+
+        <!-- Background sky -->
+        <rect width="560" height="280" fill="url(#sky)"/>
+        <!-- Sea line -->
+        <ellipse cx="280" cy="210" rx="350" ry="30" fill="#1B6B93" opacity="0.2"/>
+        <!-- Sand -->
+        <rect y="230" width="560" height="190" fill="url(#sand)"/>
+        <!-- Sand texture dots -->
+        <circle cx="50" cy="350" r="1.5" fill="#C5A04E" opacity="0.3"/>
+        <circle cx="120" cy="370" r="1" fill="#C5A04E" opacity="0.2"/>
+        <circle cx="200" cy="340" r="1.5" fill="#C5A04E" opacity="0.25"/>
+        <circle cx="380" cy="360" r="1" fill="#C5A04E" opacity="0.3"/>
+        <circle cx="450" cy="380" r="1.5" fill="#C5A04E" opacity="0.2"/>
+        <circle cx="500" cy="345" r="1" fill="#C5A04E" opacity="0.25"/>
+
+        <!-- Umbrella -->
+        <line x1="430" y1="100" x2="430" y2="310" stroke="#8B6914" stroke-width="3"/>
+        <path d="M370 105 Q430 50 490 105 Z" fill="#0A0A0A" stroke="#C5A04E" stroke-width="1"/>
+        <path d="M375 105 Q430 55 485 105" fill="none" stroke="#C5A04E" stroke-width="0.5" opacity="0.5"/>
+
+        <!-- Main stand body -->
+        <g filter="url(#shadow)">
+          <!-- Stand table -->
+          <rect x="100" y="200" width="280" height="150" rx="8" fill="url(#standBody)" stroke="url(#goldAccent)" stroke-width="1.5"/>
+          <!-- Gold top trim -->
+          <rect x="95" y="195" width="290" height="10" rx="5" fill="url(#goldAccent)"/>
+          <!-- Stand legs -->
+          <rect x="120" y="350" width="8" height="40" rx="2" fill="#0A0A0A"/>
+          <rect x="352" y="350" width="8" height="40" rx="2" fill="#0A0A0A"/>
+        </g>
+
+        <!-- ANY DI Logo text on stand -->
+        <text x="240" y="235" font-family="serif" font-size="22" font-weight="900" fill="#C5A04E" text-anchor="middle" letter-spacing="4">ANY DI</text>
+        <line x1="180" y1="243" x2="300" y2="243" stroke="#C5A04E" stroke-width="0.5" opacity="0.5"/>
+        <text x="240" y="258" font-family="sans-serif" font-size="9" fill="#E8D5A0" text-anchor="middle" letter-spacing="3" opacity="0.7">MUNICH</text>
+
+        <!-- SunCover products displayed -->
+        <!-- Product 1 -->
+        <rect x="125" y="270" width="46" height="62" rx="6" fill="#2A2826" stroke="#C5A04E" stroke-width="0.8"/>
+        <ellipse cx="148" cy="295" rx="14" ry="10" fill="none" stroke="#C5A04E" stroke-width="0.5"/>
+        <circle cx="148" cy="295" r="4" fill="#C5A04E" opacity="0.3"/>
+        <rect x="135" y="318" width="26" height="3" rx="1.5" fill="#C5A04E" opacity="0.4"/>
+
+        <!-- Product 2 -->
+        <rect x="183" y="270" width="46" height="62" rx="6" fill="#1A1A1A" stroke="#E8D5A0" stroke-width="0.8"/>
+        <ellipse cx="206" cy="295" rx="14" ry="10" fill="none" stroke="#E8D5A0" stroke-width="0.5"/>
+        <circle cx="206" cy="295" r="4" fill="#E8D5A0" opacity="0.3"/>
+        <rect x="193" y="318" width="26" height="3" rx="1.5" fill="#E8D5A0" opacity="0.4"/>
+
+        <!-- Product 3 -->
+        <rect x="241" y="270" width="46" height="62" rx="6" fill="#3a2210" stroke="#C5A04E" stroke-width="0.8"/>
+        <ellipse cx="264" cy="295" rx="14" ry="10" fill="none" stroke="#C5A04E" stroke-width="0.5"/>
+        <circle cx="264" cy="295" r="4" fill="#C5A04E" opacity="0.3"/>
+        <rect x="251" y="318" width="26" height="3" rx="1.5" fill="#C5A04E" opacity="0.4"/>
+
+        <!-- Product 4 -->
+        <rect x="299" y="270" width="46" height="62" rx="6" fill="#0E4D64" stroke="#A8D5E2" stroke-width="0.8"/>
+        <ellipse cx="322" cy="295" rx="14" ry="10" fill="none" stroke="#A8D5E2" stroke-width="0.5"/>
+        <circle cx="322" cy="295" r="4" fill="#A8D5E2" opacity="0.3"/>
+        <rect x="309" y="318" width="26" height="3" rx="1.5" fill="#A8D5E2" opacity="0.4"/>
+
+        <!-- Back display panel -->
+        <rect x="110" y="115" width="260" height="78" rx="6" fill="#0A0A0A" stroke="url(#goldAccent)" stroke-width="1" opacity="0.95"/>
+        <text x="240" y="148" font-family="serif" font-size="16" font-weight="700" fill="#C5A04E" text-anchor="middle" letter-spacing="2">THE SUNCOVER</text>
+        <text x="240" y="168" font-family="sans-serif" font-size="10" fill="rgba(250,247,240,0.6)" text-anchor="middle" letter-spacing="1">Luxury Eyewear Protection</text>
+        <text x="240" y="182" font-family="sans-serif" font-size="9" fill="#C5A04E" text-anchor="middle" letter-spacing="2" opacity="0.6">24K GOLD · VEGAN LEATHER · PATENTED</text>
+
+        <!-- Small price tags -->
+        <rect x="355" y="270" width="20" height="28" rx="3" fill="#C5A04E" opacity="0.15"/>
+        <text x="365" y="288" font-family="sans-serif" font-size="7" fill="#C5A04E" text-anchor="middle">€95</text>
+
+        <!-- Decorative elements -->
+        <circle cx="95" cy="195" r="4" fill="#C5A04E"/>
+        <circle cx="385" cy="195" r="4" fill="#C5A04E"/>
+
+        <!-- Sun rays -->
+        <circle cx="80" cy="60" r="30" fill="#C5A04E" opacity="0.1"/>
+        <circle cx="80" cy="60" r="20" fill="#C5A04E" opacity="0.15"/>
+        <circle cx="80" cy="60" r="10" fill="#C5A04E" opacity="0.25"/>
+      </svg>
+    </div>
+
+    <div>
+      <ul class="stand-specs">
+        <li>
+          <div class="spec-icon">◼</div>
+          <div class="spec-text">
+            <h5>Matte Black Stand</h5>
+            <p>Portable modular display table (120×60cm) in matte black with gold-accent trim, matching ANY DI's brand identity. Collapsible for transport.</p>
+          </div>
+        </li>
+        <li>
+          <div class="spec-icon">◈</div>
+          <div class="spec-text">
+            <h5>Gold-Lit Back Panel</h5>
+            <p>Illuminated header with brand logo and "THE SUNCOVER" messaging. Battery-powered LED strip for evening visibility at resort events.</p>
+          </div>
+        </li>
+        <li>
+          <div class="spec-icon">▤</div>
+          <div class="spec-text">
+            <h5>Product Display Slots</h5>
+            <p>Individual upright holders for 20–30 SunCovers organized by design collection. Velvet-lined risers to protect product and create luxury feel.</p>
+          </div>
+        </li>
+        <li>
+          <div class="spec-icon">☂</div>
+          <div class="spec-text">
+            <h5>Branded Parasol</h5>
+            <p>Black canopy with gold ANY DI monogram. Provides shade and doubles as eye-catching signage visible from beach and promenade.</p>
+          </div>
+        </li>
+        <li>
+          <div class="spec-icon">◎</div>
+          <div class="spec-text">
+            <h5>Try-On Mirror</h5>
+            <p>Gold-framed countertop mirror so customers can try SunCover with their own glasses — the live demo is the best sales tool.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Designer Recommendations -->
+  <div style="margin-top:50px" class="reveal">
+    <div class="section-label" style="margin-bottom:20px">Recommended Stand Designers & Builders</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; max-width:1000px">
+
+      <!-- Munich Column -->
+      <div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:18px; color:var(--gold-light); margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid rgba(197,160,78,0.15)">Munich, Germany</h3>
+
+        <div style="margin-bottom:20px">
+          <div style="font-family:'Playfair Display',serif; font-size:16px; color:var(--cream); margin-bottom:4px">RaumForm33</div>
+          <div style="font-size:12px; color:var(--gold); letter-spacing:1px; margin-bottom:6px">POP-UP STORE SPECIALISTS</div>
+          <div style="font-size:13px; color:rgba(250,247,240,0.55); line-height:1.6; font-weight:300">Munich's leading pop-up store experts. Full service: concept, store design, interior, furniture rental, and event support. Have worked with brands like Cartier, BMW, Zalando, and New Balance. Located at Baaderstr. 16, München.</div>
+          <div style="font-size:12px; color:rgba(250,247,240,0.35); margin-top:6px">info@raumform33.de · +49 89 1222 326 70</div>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div style="font-family:'Playfair Display',serif; font-size:16px; color:var(--cream); margin-bottom:4px">CDP Ladenbau + Display</div>
+          <div style="font-size:12px; color:var(--gold); letter-spacing:1px; margin-bottom:6px">RETAIL DISPLAY MANUFACTURER</div>
+          <div style="font-size:13px; color:rgba(250,247,240,0.55); line-height:1.6; font-weight:300">Specialized in pop-up store furniture and retail displays. In-house CNC manufacturing for wood, acrylic, and digital printing. Creates portable, robust displays designed for quick assembly and reuse across locations.</div>
+          <div style="font-size:12px; color:rgba(250,247,240,0.35); margin-top:6px">cdp-display.com</div>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div style="font-family:'Playfair Display',serif; font-size:16px; color:var(--cream); margin-bottom:4px">ESBAU Exhibition Stand Builders</div>
+          <div style="font-size:12px; color:var(--gold); letter-spacing:1px; margin-bottom:6px">CUSTOM STAND CONSTRUCTION</div>
+          <div style="font-size:13px; color:rgba(250,247,240,0.55); line-height:1.6; font-weight:300">Munich-based exhibition stand builder since 2013. Custom modular builds, 3D design within 5 days, turnkey delivery. Can design portable luxury display stands with gold-accent finishes.</div>
+          <div style="font-size:12px; color:rgba(250,247,240,0.35); margin-top:6px">Ingolstädter Str. 45-47, 80807 München</div>
+        </div>
+      </div>
+
+      <!-- Albania Column -->
+      <div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:18px; color:var(--gold-light); margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid rgba(197,160,78,0.15)">Albania</h3>
+
+        <div style="margin-bottom:20px">
+          <div style="font-family:'Playfair Display',serif; font-size:16px; color:var(--cream); margin-bottom:4px">Motivo</div>
+          <div style="font-size:12px; color:var(--gold); letter-spacing:1px; margin-bottom:6px">FURNITURE & HOTEL DESIGN · SARANDA</div>
+          <div style="font-size:13px; color:rgba(250,247,240,0.55); line-height:1.6; font-weight:300">Saranda-based furniture company specializing in hotel and hospitality furnishing. Custom pieces combining traditional craftsmanship with modern design. Ideal local partner since they're already based in your target market.</div>
+          <div style="font-size:12px; color:rgba(250,247,240,0.35); margin-top:6px">motivo.al</div>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div style="font-family:'Playfair Display',serif; font-size:16px; color:var(--cream); margin-bottom:4px">Kotarja Furniture</div>
+          <div style="font-size:12px; color:var(--gold); letter-spacing:1px; margin-bottom:6px">PREMIUM HANDCRAFTED · TIRANA</div>
+          <div style="font-size:13px; color:rgba(250,247,240,0.55); line-height:1.6; font-weight:300">Tirana-based artisan furniture maker with showroom. Precision-crafted custom pieces from sofas to tables. Could produce bespoke display tables with gold-accent finishing at Albanian pricing — significantly lower than German quotes.</div>
+          <div style="font-size:12px; color:rgba(250,247,240,0.35); margin-top:6px">kotarja.al · Showroom in Tirana</div>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div style="font-family:'Playfair Display',serif; font-size:16px; color:var(--cream); margin-bottom:4px">Monir Furniture</div>
+          <div style="font-size:12px; color:var(--gold); letter-spacing:1px; margin-bottom:6px">FACTORY MANUFACTURER · TIRANA</div>
+          <div style="font-size:13px; color:rgba(250,247,240,0.55); line-height:1.6; font-weight:300">Factory-based furniture manufacturer in Tirana with high-quality production capabilities. Best option for cost-effective batch production of multiple identical stands for deployment across resort locations.</div>
+          <div style="font-size:12px; color:rgba(250,247,240,0.35); margin-top:6px">monirfurniture.al</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="max-width:1000px; margin-top:24px">
+      <p><strong>Recommendation:</strong> Get the initial stand designed in Munich (RaumForm33 or CDP have luxury pop-up expertise), then have the physical builds produced in Albania (Motivo or Kotarja) at 40–60% lower cost. Ship the design files and specs to the Albanian manufacturer for production of 3–5 identical portable units.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: TARGET VENUES -->
+<section class="slide" style="background:var(--charcoal)" id="slide-5">
+  <div class="slide-number">06 / 11</div>
+  <div class="section-label reveal">Target Venues</div>
+  <h2 class="reveal">Premium <span style="color:var(--gold)">Locations</span></h2>
+  <p class="content-text reveal" style="margin-bottom:10px">We target Albania's highest-tier resorts, luxury hotels, and premium beach clubs — venues where affluent clientele are already spending and open to luxury impulse purchases.</p>
+
+  <div class="venue-grid reveal">
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-type">5-Star Eco Resort</div>
+        <div class="venue-name">Kep Merli</div>
+        <div class="venue-location">Ksamil Peninsula · Ionian Sea</div>
+      </div>
+      <div class="venue-body">
+        <p>Albania's first luxury eco-resort on a private 28-acre peninsula between Saranda and Ksamil. Private beach, yacht marina, fine dining, diving center, and golf course. Guests arrive at villa-level pricing — ideal SunCover buyers.</p>
+        <span class="venue-tag tag-luxury">Ultra Luxury</span>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-type">5-Star International Hotel</div>
+        <div class="venue-name">Meliá Durres Albania</div>
+        <div class="venue-location">Durrës Coast · Adriatic Sea</div>
+      </div>
+      <div class="venue-body">
+        <p>Albania's premier all-inclusive beachfront resort by the Meliá Hotels International chain. Six restaurants, infinity pools, spa, 138m main pool. Attracts European package tourists and families with significant spending power.</p>
+        <span class="venue-tag tag-resort">All-Inclusive Resort</span>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-type">Luxury Resort & Casino</div>
+        <div class="venue-name">Marina Bay</div>
+        <div class="venue-location">Vlora · Ionian Coast</div>
+      </div>
+      <div class="venue-body">
+        <p>Maritim Marina Bay Resort SPA & Casino — Albania's premier entertainment destination on the Ionian coast. Private beach, casino, spa, helicopter pad. Adult-focused luxury crowd perfect for accessories.</p>
+        <span class="venue-tag tag-premium">Premium Resort</span>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-type">Beach Clubs & Hotspots</div>
+        <div class="venue-name">Saranda & Ksamil</div>
+        <div class="venue-location">Albanian Riviera South</div>
+      </div>
+      <div class="venue-body">
+        <p>Lost Seaside, Mango Beach, Bougainville Bay, and waterfront promenades. Highest tourist density on the Riviera — summer crowds of fashion-conscious beachgoers and international visitors from Corfu ferry.</p>
+        <span class="venue-tag tag-resort">Beach Club Circuit</span>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-type">Emerging Hotspot</div>
+        <div class="venue-name">Dhermi & Himara</div>
+        <div class="venue-location">Central Albanian Riviera</div>
+      </div>
+      <div class="venue-body">
+        <p>Trendy boutique destinations with younger, affluent crowd. Dramatic mountain-meets-sea setting. Growing nightlife scene and beach club culture — ideal for Instagram-driven product awareness.</p>
+        <span class="venue-tag tag-premium">Trending</span>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-type">Airport & Transit</div>
+        <div class="venue-name">Vlora & Tirana Airports</div>
+        <div class="venue-location">National Gateways</div>
+      </div>
+      <div class="venue-body">
+        <p>The new Vlora International Airport (opened 2025) plus Tirana International Airport. Capture arriving tourists at the departure lounges — SunCover as the perfect last-minute Albanian souvenir.</p>
+        <span class="venue-tag tag-luxury">High Traffic</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: IMPORT & LOGISTICS -->
+<section class="slide" style="background:var(--warm-gray)" id="slide-6">
+  <div class="slide-number">07 / 11</div>
+  <div class="section-label reveal">Import & Logistics</div>
+  <h2 class="reveal">Getting Product <span style="color:var(--gold)">From Munich to Albania</span></h2>
+  <div class="logistics-grid reveal">
+    <div class="logistics-box">
+      <h3>Customs & Duties</h3>
+      <ul>
+        <li>Albania's SAA with the EU = preferential / 0% tariff on industrial products from EU</li>
+        <li>Luxury accessories may fall 0%–15% depending on HS code classification</li>
+        <li>VAT at 20% on CIF value (cost + insurance + freight)</li>
+        <li>Customs scanning fee: €22 for declarations over €1,000</li>
+      </ul>
+      <div class="highlight-box">
+        <p>Key advantage: EU-origin goods benefit from significantly reduced or zero customs duties under Albania's SAA trade agreement.</p>
+      </div>
+    </div>
+    <div class="logistics-box">
+      <h3>Shipping Options</h3>
+      <ul>
+        <li><strong>Road freight (best):</strong> Munich → Durres via Austria, Slovenia, Croatia, Montenegro. 3–5 days.</li>
+        <li><strong>Groupage/LTL:</strong> GALA, LKW Walter, Balkan Trans handle Germany–Albania routes regularly.</li>
+        <li><strong>Parcel:</strong> DHL/UPS for small initial orders. Simple but higher per-unit cost.</li>
+        <li><strong>Sea freight:</strong> Hamburg/Bari → Port of Durres. Economical for bulk.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: COMPANY REGISTRATION -->
+<section class="slide" style="background:var(--black)" id="slide-7">
+  <div class="slide-number">08 / 11</div>
+  <div class="section-label reveal">Legal Setup</div>
+  <h2 class="reveal">Registering Your <span style="color:var(--gold)">Albanian Company</span></h2>
+  <p class="content-text reveal" style="margin-bottom:10px">The Albanian LLC (SHPK) — fast, online, affordable. Typically completed in 1–2 business days.</p>
+  <div class="steps-grid reveal">
+    <div class="step-card"><div class="step-num">01</div><h4>Reserve Name</h4><p>Check at National Business Center (QKB). Takes 1 day.</p></div>
+    <div class="step-card"><div class="step-num">02</div><h4>Prepare Docs</h4><p>Articles of association, notarized & translated. Min capital: 100 LEK.</p></div>
+    <div class="step-card"><div class="step-num">03</div><h4>Register Online</h4><p>Submit via e-Albania. Approval within 48h. Certificate in 24h after.</p></div>
+    <div class="step-card"><div class="step-num">04</div><h4>Tax & Bank</h4><p>Get NIPT (tax ID), register VAT, open bank account within 20 days.</p></div>
+    <div class="step-card"><div class="step-num">05</div><h4>Go Fiscal</h4><p>Electronic fiscal cert (~4,000 LEK/yr), e-signature (~4,800 LEK/yr), stamp (~3,000 LEK).</p></div>
+  </div>
+  <div class="highlight-box reveal" style="max-width:800px;margin-top:30px">
+    <p>Total registration cost: approx. €200–€400. Corporate tax: 15%. VAT: 20%.</p>
+  </div>
+</section>
+
+<!-- SLIDE 9: FINANCIALS -->
+<section class="slide" style="background:var(--charcoal)" id="slide-8">
+  <div class="slide-number">09 / 11</div>
+  <div class="section-label reveal">Financial Estimate</div>
+  <h2 class="reveal">Startup Investment <span style="color:var(--gold)">& Unit Economics</span></h2>
+  <table class="finance-table reveal">
+    <thead><tr><th>Cost Item</th><th>Estimated Amount</th></tr></thead>
+    <tbody>
+      <tr><td>Company registration & legal</td><td>€300 – €500</td></tr>
+      <tr><td>Initial inventory (300 units @ ~€40–50 B2B)</td><td>€12,000 – €15,000</td></tr>
+      <tr><td>Shipping & customs (Germany → Albania)</td><td>€500 – €1,200</td></tr>
+      <tr><td>VAT on import (20% of CIF)</td><td>€2,500 – €3,200</td></tr>
+      <tr><td>Pop-up stands & displays (3–5 locations)</td><td>€2,000 – €4,000</td></tr>
+      <tr><td>Marketing & branding materials</td><td>€500 – €1,000</td></tr>
+      <tr><td>Operational buffer (travel, permits, etc.)</td><td>€1,000 – €2,000</td></tr>
+      <tr class="total"><td>Total Estimated Startup</td><td>€18,800 – €26,900</td></tr>
+    </tbody>
+  </table>
+  <div class="highlight-box reveal" style="max-width:800px;margin-top:24px">
+    <p>Selling at €90–€120/unit with 70% sell-through on 300 units = €19,000–€25,000+ first summer revenue. VAT paid on import is reclaimable against sales VAT collected.</p>
+  </div>
+  <p class="note reveal">* B2B pricing is estimated; negotiate with ANY DI Munich. Financial projections are illustrative.</p>
+</section>
+
+<!-- SLIDE 10: EXPANSION -->
+<section class="slide" style="background:var(--black)" id="slide-9">
+  <div class="slide-number">10 / 11</div>
+  <div class="section-label reveal">Fall 2027+</div>
+  <h2 class="reveal">Retail Expansion <span style="color:var(--gold)">Channels</span></h2>
+  <div class="expansion-cols reveal">
+    <div>
+      <div class="channel-card"><div class="channel-name">Optician Shops</div><div class="channel-desc">Natural complementary product for eyewear retailers. Wholesale or consignment terms. Target Tirana, Saranda, Vlora, Durrës, Korçë.</div></div>
+      <div class="channel-card"><div class="channel-name">Luxury Boutiques</div><div class="channel-desc">Fashion boutiques and gift shops in Tirana's Blloku district. ANY DI's positioning aligns with premium Albanian retail.</div></div>
+      <div class="channel-card"><div class="channel-name">Hotel Gift Shops</div><div class="channel-desc">Partner with Meliá, Marina Bay, Kep Merli, Bougainville Bay, and other 4–5 star properties for lobby/gift shop placement.</div></div>
+    </div>
+    <div>
+      <div class="channel-card"><div class="channel-name">E-Commerce & Social</div><div class="channel-desc">Albanian-language Instagram shop + simple webshop. Albanian consumers are highly active on social media for shopping.</div></div>
+      <div class="channel-card"><div class="channel-name">Airport Retail</div><div class="channel-desc">Vlora International Airport (opened 2025) and Tirana Airport departure lounges. Last-minute souvenir positioning.</div></div>
+      <div class="channel-card"><div class="channel-name">Corporate Gifting</div><div class="channel-desc">Position SunCovers as premium corporate gifts. Custom or branded options for bulk B2B orders from Albanian businesses.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 11: CLOSING -->
+<section class="slide slide-closing" style="background:var(--black)" id="slide-10">
+  <div class="slide-number">11 / 11</div>
+  <h1 class="closing-title reveal">The <span class="gold">Riviera</span><br>Awaits</h1>
+  <p class="closing-sub reveal">A premium German accessory meets Europe's most exciting emerging luxury market. The opportunity is now.</p>
+  <div class="divider-line reveal"></div>
+  <div class="reveal" style="margin-top:30px">
+    <p style="font-size:14px;color:rgba(250,247,240,0.5);letter-spacing:1px;margin-bottom:10px">ANY DI SunCover × Albania</p>
+    <p style="font-size:13px;color:rgba(250,247,240,0.3)">2027 Market Entry Plan — Confidential</p>
+  </div>
+</section>
+
+<script>
+  const totalSlides = 11;
+  const navContainer = document.getElementById('navDots');
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot';
+    dot.dataset.slide = i;
+    dot.addEventListener('click', () => {
+      document.getElementById('slide-' + i).scrollIntoView({ behavior: 'smooth' });
+    });
+    navContainer.appendChild(dot);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const slideId = parseInt(entry.target.id.split('-')[1]);
+        document.querySelectorAll('.nav-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === slideId);
+        });
+        entry.target.querySelectorAll('.reveal').forEach((el, i) => {
+          setTimeout(() => el.classList.add('visible'), i * 150);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.slide').forEach(slide => observer.observe(slide));
+
+  let hintHidden = false;
+  window.addEventListener('scroll', () => {
+    if (!hintHidden && window.scrollY > 100) {
+      document.getElementById('keyHint').style.opacity = '0';
+      hintHidden = true;
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>
