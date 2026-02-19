@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sauna Social Club — Munich</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f7f2;
+    --bg2: #e8f2e8;
+    --bg3: #ffffff;
+    --amber: #3a7a4a;
+    --amber-light: #4e9e62;
+    --amber-dim: #a8cdb0;
+    --cream: #1a2e1f;
+    --cream-dim: #4a6b52;
+    --red: #2a6b3a;
+    --steam: rgba(58,122,74,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* NAVIGATION */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 48px;
+    background: linear-gradient(to bottom, rgba(242,247,242,0.97), transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--amber);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--cream-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--amber-light); }
+
+  /* SLIDES */
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide-inner {
+    max-width: 1100px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* DECORATIVE STEAM CIRCLES */
+  .steam-bg {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  /* SLIDE COUNTER */
+  .slide-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--amber-dim);
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  /* HEADINGS */
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 140px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: var(--cream);
+  }
+
+  h1 em {
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    color: var(--amber);
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    letter-spacing: 3px;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--amber-light);
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 20px;
+    line-height: 1.7;
+    color: var(--cream-dim);
+    font-weight: 300;
+  }
+
+  p strong {
+    color: var(--cream);
+    font-weight: 600;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--amber);
+    margin: 24px 0;
+  }
+
+  /* CARDS GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+
+  .card {
+    background: var(--bg3);
+    border: 1px solid rgba(58,122,74,0.15);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--amber);
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .card h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* STAT BLOCKS */
+  .stat {
+    text-align: center;
+    padding: 32px 20px;
+    border: 1px solid rgba(58,122,74,0.2);
+    background: rgba(58,122,74,0.04);
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--amber);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--cream-dim);
+    text-transform: uppercase;
+    margin-top: 8px;
+    display: block;
+  }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid var(--amber-dim);
+    padding: 4px 10px;
+    margin: 3px;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 160px 1px 1fr;
+    gap: 0 24px;
+    padding-bottom: 32px;
+  }
+
+  .timeline-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--amber);
+    text-align: right;
+    padding-top: 4px;
+  }
+
+  .timeline-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--amber);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .timeline-connector {
+    flex: 1;
+    width: 1px;
+    background: rgba(58,122,74,0.3);
+    margin-top: 4px;
+  }
+
+  .timeline-content h3 {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .timeline-content p {
+    font-size: 15px;
+  }
+
+  /* REVENUE TABLE */
+  .rev-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .rev-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--amber);
+    border-bottom: 1px solid var(--amber-dim);
+    padding: 12px 16px;
+    text-align: left;
+  }
+
+  .rev-table td {
+    font-size: 17px;
+    color: var(--cream-dim);
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(58,122,74,0.08);
+  }
+
+  .rev-table td:last-child {
+    color: var(--cream);
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  .rev-table tr.total td {
+    border-top: 1px solid var(--amber-dim);
+    color: var(--amber-light);
+    font-size: 20px;
+  }
+
+  /* QUOTE */
+  .quote-block {
+    border-left: 3px solid var(--amber);
+    padding: 24px 32px;
+    background: rgba(58,122,74,0.04);
+    margin: 32px 0;
+  }
+
+  .quote-block p {
+    font-size: 26px;
+    font-style: italic;
+    color: var(--cream);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* PILL LIST */
+  .pill-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .pill {
+    background: var(--bg3);
+    border: 1px solid rgba(58,122,74,0.2);
+    padding: 8px 16px;
+    font-size: 14px;
+    color: var(--cream-dim);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* APP SCREEN MOCK */
+  .phone-mock {
+    width: 240px;
+    height: 480px;
+    border: 2px solid rgba(58,122,74,0.4);
+    border-radius: 32px;
+    overflow: hidden;
+    background: #1a2e1f;
+    flex-shrink: 0;
+    position: relative;
+    padding: 20px 16px;
+  }
+
+  .phone-status {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: #7ec890;
+    margin-bottom: 16px;
+  }
+
+  .app-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: #7ec890;
+    margin-bottom: 4px;
+  }
+
+  .app-week {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    color: #4e7a58;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  .app-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(58,122,74,0.3);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+
+  .app-card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: #7ec890;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .app-card-title {
+    font-size: 12px;
+    color: #e8f5ea;
+    font-weight: 600;
+  }
+
+  .app-nav {
+    position: absolute;
+    bottom: 16px;
+    left: 16px; right: 16px;
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid rgba(126,200,144,0.2);
+    padding-top: 10px;
+  }
+
+  .app-nav-item {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  /* HORIZONTAL RULE */
+  hr.amber {
+    border: none;
+    border-top: 1px solid rgba(58,122,74,0.2);
+    margin: 40px 0;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    background: rgba(58,122,74,0.1);
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--amber);
+    border-radius: 2px;
+  }
+
+  /* COVER SLIDE SPECIFIC */
+  #cover {
+    background: linear-gradient(135deg, #e8f5e8 0%, #d0ecd5 60%, #c5e8cc 100%);
+    min-height: 100vh;
+  }
+
+  .cover-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--cream-dim);
+    margin-top: 24px;
+    font-weight: 300;
+  }
+
+  .cover-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--amber-dim);
+    margin-top: 48px;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes steamRise {
+    0% { transform: translateY(0) scale(1); opacity: 0.4; }
+    100% { transform: translateY(-60px) scale(1.3); opacity: 0; }
+  }
+
+  .fade-in {
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.25s; }
+  .delay-3 { animation-delay: 0.4s; }
+  .delay-4 { animation-delay: 0.55s; }
+  .delay-5 { animation-delay: 0.7s; }
+
+  /* STEAM PARTICLES */
+  .steam-particle {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(58,122,74,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    animation: steamRise 8s ease-in-out infinite;
+  }
+
+  /* SECTION BG VARIATIONS */
+  .slide-dark { background: var(--bg); }
+  .slide-mid { background: var(--bg2); }
+  .slide-warm { background: linear-gradient(135deg, #e8f2e8 0%, #d4ead8 100%); }
+
+  /* LARGE ORNAMENT NUMBER */
+  .ornament-num {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 300px;
+    color: rgba(58,122,74,0.07);
+    line-height: 1;
+    right: -20px;
+    top: -60px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* TWO COL LAYOUT */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .two-col-wide {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  /* NUMBERED LIST */
+  .numbered-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .numbered-list li {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .num-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--amber);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 32px;
+  }
+
+  .numbered-list p {
+    font-size: 17px;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(58,122,74,0.1);
+  }
+
+  footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--amber-dim);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .slide { padding: 80px 24px 60px; }
+    .grid-2, .grid-3, .grid-4, .two-col, .two-col-wide { grid-template-columns: 1fr; }
+    h1 { font-size: 60px; }
+    h2 { font-size: 40px; }
+    .ornament-num { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-logo">SSC</div>
+  <ul class="nav-links">
+    <li><a href="#concept">Concept</a></li>
+    <li><a href="#market">Market</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#programming">Programming</a></li>
+    <li><a href="#model">Revenue</a></li>
+    <li><a href="#app">App</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+  </ul>
+</nav>
+
+<!-- SLIDE 01: COVER -->
+<section id="cover" class="slide slide-dark">
+  <div class="steam-particle" style="left: 10%; bottom: 20%; animation-delay: 0s;"></div>
+  <div class="steam-particle" style="right: 5%; bottom: 10%; animation-delay: 3s;"></div>
+  <div class="steam-particle" style="left: 50%; bottom: 0%; animation-delay: 5s;"></div>
+
+  <div class="slide-inner">
+    <span class="section-label fade-in delay-1">Munich, Germany — 2026</span>
+    <h1 class="fade-in delay-2">SAUNA<br><em>Social</em><br>CLUB</h1>
+    <p class="cover-tagline fade-in delay-3">Where ritual meets curiosity.<br>A wellness community built around the art of the sauna.</p>
+    <div class="cover-meta fade-in delay-4">BUSINESS CONCEPT OVERVIEW — CONFIDENTIAL</div>
+  </div>
+</section>
+
+<!-- SLIDE 02: THE PROBLEM -->
+<section id="concept" class="slide slide-mid">
+  <div class="ornament-num">02</div>
+  <div class="slide-inner">
+    <span class="slide-num">01 / THE OPPORTUNITY</span>
+    <div class="two-col">
+      <div>
+        <span class="section-label fade-in">The Gap</span>
+        <h2 class="fade-in delay-1">MUNICH<br>IS MISSING<br>THIS</h2>
+        <div class="divider fade-in delay-2"></div>
+        <p class="fade-in delay-3">Munich has thermal baths. It has yoga studios. It has wellness spas. But it has <strong>nothing</strong> that combines premium sauna culture with a living, breathing health community — a place where curious, health-obsessed people come to learn, connect, and transform their relationship with their body.</p>
+      </div>
+      <div class="fade-in delay-3">
+        <div class="card" style="margin-bottom: 16px;">
+          <span class="card-icon">🏛️</span>
+          <h3>The Clinical Gap</h3>
+          <p>Existing saunas in Munich (Therme, Müller'sches) are transactional. You pay, you sweat, you leave. No community. No education. No identity.</p>
+        </div>
+        <div class="card" style="margin-bottom: 16px;">
+          <span class="card-icon">🧘</span>
+          <h3>The Studio Gap</h3>
+          <p>Yoga and mindfulness studios exist but are siloed. No heat ritual. No social culture. No cross-disciplinary health education.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">✨</span>
+          <h3>The Community Gap</h3>
+          <p>The 20–35 health-conscious Munich demographic has no premium "home base" — a third place between work and home built around their values.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 03: THE CONCEPT -->
+<section class="slide slide-warm">
+  <div class="ornament-num">03</div>
+  <div class="slide-inner">
+    <span class="slide-num">02 / THE CONCEPT</span>
+    <span class="section-label fade-in">What We're Building</span>
+    <h2 class="fade-in delay-1">NOT A SPA.<br>A LIFESTYLE<br>INSTITUTION.</h2>
+    <div class="divider fade-in delay-2"></div>
+
+    <div class="quote-block fade-in delay-3">
+      <p>"The club for people who treat their health like a craft."</p>
+    </div>
+
+    <div class="grid-3 fade-in delay-4" style="margin-top: 32px;">
+      <div class="card">
+        <span class="card-icon">🔥</span>
+        <h3>The Sauna</h3>
+        <p>3–4 premium saunas — Finnish, steam, infrared, and contrast cold plunge. The ritual anchor of the entire experience.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">☕</span>
+        <h3>The Café</h3>
+        <p>Adaptogen lattes, medicinal teas, and nutritional food — every item tied to the weekly health theme. Matcha, reishi, ceremonial cacao.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎙️</span>
+        <h3>The Programming</h3>
+        <p>Weekly themed events: guest speakers, workshops, tastings, breathwork sessions, sound baths. 52 unique concepts per year.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🧠</span>
+        <h3>The Education</h3>
+        <p>Wim Hof, Ayurveda, nootropics, longevity science, gut health — brought to life through real experts and experiences.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">👥</span>
+        <h3>The Community</h3>
+        <p>A curated membership that self-selects for curious, health-forward people. The network effect is the product.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📱</span>
+        <h3>The App</h3>
+        <p>Members-only digital layer — booking, ritual tracking, content library, community feed, and weekly programming digest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 04: TARGET MARKET -->
+<section id="market" class="slide slide-dark">
+  <div class="ornament-num">04</div>
+  <div class="slide-inner">
+    <span class="slide-num">03 / TARGET MARKET</span>
+    <div class="two-col">
+      <div>
+        <span class="section-label fade-in">Who We Serve</span>
+        <h2 class="fade-in delay-1">THE<br>MATCHA<br>DRINKER.</h2>
+        <div class="divider fade-in delay-2"></div>
+        <p class="fade-in delay-3">Age 20–35. Lives in Munich. Earns well. Health is part of their identity, not just a habit. They already track their sleep, take magnesium, do cold plunges at home. They're looking for a community that gets it — and a place worthy of their standards.</p>
+        <br>
+        <p class="fade-in delay-3">They share their rituals on social media. They attend concepts, not just classes. They spend €150–300/month on wellness without hesitation. <strong>They are our members and our marketers.</strong></p>
+      </div>
+      <div class="fade-in delay-3">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="stat">
+            <span class="stat-num">1.6M</span>
+            <span class="stat-label">Munich Population</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">~180K</span>
+            <span class="stat-label">Target Demographic</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">€180</span>
+            <span class="stat-label">Avg Monthly Wellness Spend</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">0</span>
+            <span class="stat-label">Direct Competitors</span>
+          </div>
+        </div>
+        <div style="margin-top: 24px;">
+          <div class="pill-grid">
+            <span class="tag">Biohackers</span>
+            <span class="tag">Yoga practitioners</span>
+            <span class="tag">Expats</span>
+            <span class="tag">Entrepreneurs</span>
+            <span class="tag">Creatives</span>
+            <span class="tag">Tech professionals</span>
+            <span class="tag">Functional fitness</span>
+            <span class="tag">Plant-based</span>
+            <span class="tag">Mindfulness</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 05: THE EXPERIENCE -->
+<section id="experience" class="slide slide-mid">
+  <div class="ornament-num">05</div>
+  <div class="slide-inner">
+    <span class="slide-num">04 / THE EXPERIENCE</span>
+    <span class="section-label fade-in">A Member's Evening</span>
+    <h2 class="fade-in delay-1">THIS IS WHAT<br>MEMBERSHIP<br>FEELS LIKE.</h2>
+    <div class="divider fade-in delay-2"></div>
+
+    <div class="timeline fade-in delay-3" style="margin-top: 40px;">
+      <div class="timeline-item">
+        <div class="timeline-date">18:30</div>
+        <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+        <div class="timeline-content">
+          <h3>Arrival & Check-In</h3>
+          <p>QR code entry via app. You're greeted by the week's theme — tonight it's Himalayan herbal medicine. The scent of rhododendron tea fills the café.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">18:45</div>
+        <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+        <div class="timeline-content">
+          <h3>Café & Pre-Ritual</h3>
+          <p>You order a yak butter tea adaptation — the café's weekly special. A member you met last Thursday is there. You catch up.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">19:15</div>
+        <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+        <div class="timeline-content">
+          <h3>Sauna Ritual</h3>
+          <p>Three rounds in the Finnish sauna. Birch branches. Löyly steam. Cold plunge between rounds. You forget about your phone completely.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">20:30</div>
+        <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+        <div class="timeline-content">
+          <h3>The Weekly Talk</h3>
+          <p>A Tibetan herbalist speaks for 40 minutes about adaptogenic plants. You take notes. Someone brings homemade chaga chocolate to share.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">21:30</div>
+        <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+        <div class="timeline-content">
+          <h3>Community & Close</h3>
+          <p>The evening winds down over herbal tea. You've made two new connections, learned something real, and your nervous system is completely at rest.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 06: PROGRAMMING -->
+<section id="programming" class="slide slide-warm">
+  <div class="ornament-num">06</div>
+  <div class="slide-inner">
+    <span class="slide-num">05 / PROGRAMMING</span>
+    <span class="section-label fade-in">52 Weeks of Content</span>
+    <h2 class="fade-in delay-1">THE WEEKLY<br>UNIVERSE.</h2>
+    <div class="divider fade-in delay-2"></div>
+    <p class="fade-in delay-2" style="max-width: 600px; margin-bottom: 32px;">Every week a new theme. Every theme is an immersive world — tied to the café menu, the sauna ritual, the event, and the app content. Here's a sample from each category:</p>
+
+    <div class="grid-2 fade-in delay-3">
+      <div>
+        <h3 style="font-size: 16px; letter-spacing: 2px; font-family: 'DM Mono', monospace; color: var(--amber); margin-bottom: 12px;">🔥 HEAT & COLD</h3>
+        <div class="pill-grid">
+          <span class="pill">Finnish Sauna Ritual</span>
+          <span class="pill">Russian Banya Night</span>
+          <span class="pill">Wim Hof Ice Immersion</span>
+          <span class="pill">Contrast Therapy Science</span>
+          <span class="pill">Cold Water Swimming</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size: 16px; letter-spacing: 2px; font-family: 'DM Mono', monospace; color: var(--amber); margin-bottom: 12px;">🌿 PLANTS & HERBS</h3>
+        <div class="pill-grid">
+          <span class="pill">Himalayan Herbal Medicine</span>
+          <span class="pill">Adaptogens Deep Dive</span>
+          <span class="pill">Medicinal Mushrooms</span>
+          <span class="pill">Wildcrafting Walk</span>
+          <span class="pill">Ayurvedic Herbs</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size: 16px; letter-spacing: 2px; font-family: 'DM Mono', monospace; color: var(--amber); margin-bottom: 12px;">🧠 MIND & BREATH</h3>
+        <div class="pill-grid">
+          <span class="pill">Holotropic Breathwork</span>
+          <span class="pill">Stoicism as Practice</span>
+          <span class="pill">Flow State Engineering</span>
+          <span class="pill">Yoga Nidra Evening</span>
+          <span class="pill">Digital Detox Night</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size: 16px; letter-spacing: 2px; font-family: 'DM Mono', monospace; color: var(--amber); margin-bottom: 12px;">🌍 CULTURAL RITUALS</h3>
+        <div class="pill-grid">
+          <span class="pill">Japanese Onsen Culture</span>
+          <span class="pill">Moroccan Hammam</span>
+          <span class="pill">Blue Zones Evening</span>
+          <span class="pill">Balinese Healing</span>
+          <span class="pill">Kneipp Therapy</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size: 16px; letter-spacing: 2px; font-family: 'DM Mono', monospace; color: var(--amber); margin-bottom: 12px;">🎵 SENSORY & ARTS</h3>
+        <div class="pill-grid">
+          <span class="pill">Crystal Sound Bath</span>
+          <span class="pill">Cacao Ceremony</span>
+          <span class="pill">Ecstatic Dance</span>
+          <span class="pill">Gong Meditation</span>
+          <span class="pill">Aromatherapy Lab</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size: 16px; letter-spacing: 2px; font-family: 'DM Mono', monospace; color: var(--amber); margin-bottom: 12px;">💊 BIOHACKING</h3>
+        <div class="pill-grid">
+          <span class="pill">Nootropics Evening</span>
+          <span class="pill">Longevity Supplements</span>
+          <span class="pill">HRV & Recovery</span>
+          <span class="pill">Sleep Optimization</span>
+          <span class="pill">Zone 2 & VO2 Max</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 07: REVENUE MODEL -->
+<section id="model" class="slide slide-dark">
+  <div class="ornament-num">07</div>
+  <div class="slide-inner">
+    <span class="slide-num">06 / REVENUE MODEL</span>
+    <span class="section-label fade-in">Membership-First</span>
+    <h2 class="fade-in delay-1">THE<br>NUMBERS.</h2>
+    <div class="divider fade-in delay-2"></div>
+
+    <div class="two-col-wide fade-in delay-3">
+      <div>
+        <h3 style="margin-bottom: 20px;">Membership Tiers</h3>
+        <table class="rev-table">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Monthly</th>
+              <th>Includes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Basic</td>
+              <td>€80–100</td>
+              <td>8 sauna visits/month</td>
+            </tr>
+            <tr>
+              <td>Social</td>
+              <td>€150–180</td>
+              <td>Unlimited sauna + all events</td>
+            </tr>
+            <tr>
+              <td>Founders (100 only)</td>
+              <td>€200–250</td>
+              <td>All-access + name on wall + founding perks</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top: 32px; margin-bottom: 20px;">Projected Monthly Revenue (Steady State)</h3>
+        <table class="rev-table">
+          <thead>
+            <tr>
+              <th>Stream</th>
+              <th>Assumption</th>
+              <th>Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Memberships</td>
+              <td>300 members @ €130 avg</td>
+              <td>€39,000</td>
+            </tr>
+            <tr>
+              <td>Day Passes</td>
+              <td>150/month @ €30</td>
+              <td>€4,500</td>
+            </tr>
+            <tr>
+              <td>Café</td>
+              <td>High-margin, theme-driven</td>
+              <td>€6,000</td>
+            </tr>
+            <tr>
+              <td>Events & Workshops</td>
+              <td>Private + ticketed</td>
+              <td>€3,500</td>
+            </tr>
+            <tr>
+              <td>Products & E-commerce</td>
+              <td>Teas, supplements, branded</td>
+              <td>€2,000</td>
+            </tr>
+            <tr class="total">
+              <td><strong>Total</strong></td>
+              <td></td>
+              <td><strong>€55,000</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <h3 style="margin-bottom: 20px;">Cost Structure</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 15px; color: var(--cream-dim);">Rent (400sqm Schwabing)</span>
+              <span style="font-size: 15px; color: var(--cream);">€14,000</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 52%;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 15px; color: var(--cream-dim);">Staff (4–5 people)</span>
+              <span style="font-size: 15px; color: var(--cream);">€12,000</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 44%;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 15px; color: var(--cream-dim);">Utilities & maintenance</span>
+              <span style="font-size: 15px; color: var(--cream);">€3,500</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 13%;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 15px; color: var(--cream-dim);">Programming & speakers</span>
+              <span style="font-size: 15px; color: var(--cream);">€2,500</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 9%;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 15px; color: var(--cream-dim);">Marketing & community</span>
+              <span style="font-size: 15px; color: var(--cream);">€2,000</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 7%;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 15px; color: var(--cream-dim);">Café COGS & supplies</span>
+              <span style="font-size: 15px; color: var(--cream);">€2,500</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 9%;"></div></div>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--amber-dim); margin-top: 20px; padding-top: 16px; display: flex; justify-content: space-between;">
+          <span style="font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; color: var(--amber);">TOTAL FIXED COSTS</span>
+          <span style="font-size: 20px; color: var(--amber-light); font-weight: 600;">€36,500</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+          <span style="font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; color: var(--amber);">OPERATING MARGIN</span>
+          <span style="font-size: 20px; color: #3a7a4a; font-weight: 600;">€18,500</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 08: BUILD COSTS -->
+<section class="slide slide-mid">
+  <div class="ornament-num">08</div>
+  <div class="slide-inner">
+    <span class="slide-num">07 / INVESTMENT</span>
+    <span class="section-label fade-in">What It Takes to Build</span>
+    <h2 class="fade-in delay-1">TOTAL BUILD<br>COST.</h2>
+    <div class="divider fade-in delay-2"></div>
+
+    <div class="grid-2 fade-in delay-3" style="margin-bottom: 40px;">
+      <div>
+        <h3 style="margin-bottom: 20px;">Build-Out Costs</h3>
+        <table class="rev-table">
+          <thead><tr><th>Item</th><th>Est. Cost</th></tr></thead>
+          <tbody>
+            <tr><td>3–4 premium saunas (Klafs/Harvia)</td><td>€60,000–100,000</td></tr>
+            <tr><td>Plumbing, steam & drainage</td><td>€50,000–80,000</td></tr>
+            <tr><td>Changing rooms & showers</td><td>€30,000–50,000</td></tr>
+            <tr><td>Ventilation & electrical</td><td>€25,000–40,000</td></tr>
+            <tr><td>Café fit-out</td><td>€20,000–35,000</td></tr>
+            <tr><td>Interiors, furniture & branding</td><td>€30,000–50,000</td></tr>
+            <tr><td>Cold plunge installation</td><td>€15,000–25,000</td></tr>
+            <tr><td>App MVP build</td><td>€15,000–30,000</td></tr>
+            <tr class="total"><td><strong>Total</strong></td><td><strong>€245,000–410,000</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin-bottom: 20px;">Financing Options</h3>
+        <ul class="numbered-list">
+          <li>
+            <span class="num-badge">01</span>
+            <div><p><strong>KfW Startup Loan</strong> — German federal bank offering low-interest loans up to €100k for first-time entrepreneurs.</p></div>
+          </li>
+          <li>
+            <span class="num-badge">02</span>
+            <div><p><strong>Founding Member Pre-Sales</strong> — 100 Founder memberships at €500 setup fee = €50k in pre-open revenue and market validation in one move.</p></div>
+          </li>
+          <li>
+            <span class="num-badge">03</span>
+            <div><p><strong>Startnext Crowdfunding</strong> — Germany's premier crowdfunding platform. Wellness/lifestyle projects with strong visual identity perform exceptionally well.</p></div>
+          </li>
+          <li>
+            <span class="num-badge">04</span>
+            <div><p><strong>Invest in Bavaria</strong> — State support program for Munich-area businesses. Grants and subsidies available for innovative concepts.</p></div>
+          </li>
+          <li>
+            <span class="num-badge">05</span>
+            <div><p><strong>Angel Investors</strong> — Lifestyle and wellness-focused angels are active in Munich's startup scene. A strong deck and waitlist are the entry ticket.</p></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 09: APP CONCEPT -->
+<section id="app" class="slide slide-warm">
+  <div class="ornament-num">09</div>
+  <div class="slide-inner">
+    <span class="slide-num">08 / THE APP</span>
+    <span class="section-label fade-in">Members-Only Digital Layer</span>
+    <h2 class="fade-in delay-1">SSC IN<br>YOUR POCKET.</h2>
+    <div class="divider fade-in delay-2"></div>
+
+    <div class="two-col fade-in delay-3">
+      <div>
+        <p style="margin-bottom: 32px;">The app isn't a booking tool. It's an extension of the club — a daily touchpoint that keeps members engaged between visits and deepens their connection to the SSC world.</p>
+
+        <div class="grid-2" style="gap: 12px;">
+          <div class="card" style="padding: 20px;">
+            <span class="card-icon" style="font-size: 20px;">🪪</span>
+            <h3 style="font-size: 16px;">Member Profile</h3>
+            <p style="font-size: 13px;">Wellness passport, archetype, ritual history</p>
+          </div>
+          <div class="card" style="padding: 20px;">
+            <span class="card-icon" style="font-size: 20px;">📅</span>
+            <h3 style="font-size: 16px;">Booking</h3>
+            <p style="font-size: 13px;">Sauna slots, events, private bookings, QR entry</p>
+          </div>
+          <div class="card" style="padding: 20px;">
+            <span class="card-icon" style="font-size: 20px;">🔥</span>
+            <h3 style="font-size: 16px;">Ritual Tracker</h3>
+            <p style="font-size: 13px;">Log sessions, build streaks, session journal</p>
+          </div>
+          <div class="card" style="padding: 20px;">
+            <span class="card-icon" style="font-size: 20px;">📖</span>
+            <h3 style="font-size: 16px;">The Library</h3>
+            <p style="font-size: 13px;">Curated content tied to each week's theme</p>
+          </div>
+          <div class="card" style="padding: 20px;">
+            <span class="card-icon" style="font-size: 20px;">👥</span>
+            <h3 style="font-size: 16px;">Community</h3>
+            <p style="font-size: 13px;">Member feed, interest groups, who's coming tonight</p>
+          </div>
+          <div class="card" style="padding: 20px;">
+            <span class="card-icon" style="font-size: 20px;">🎙️</span>
+            <h3 style="font-size: 16px;">SSC Podcast</h3>
+            <p style="font-size: 13px;">Short episodes with weekly speakers, early access</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHONE MOCKUP -->
+      <div style="display: flex; justify-content: center; gap: 24px; align-items: flex-start;">
+        <div class="phone-mock">
+          <div class="phone-status">
+            <span>9:41</span>
+            <span>●●●</span>
+          </div>
+          <div class="app-header">SSC</div>
+          <div class="app-week">WEEK 14 — ADAPTOGENS</div>
+          <div class="app-card">
+            <div class="app-card-label">This Week</div>
+            <div class="app-card-title">🌿 Himalayan Herb Night</div>
+          </div>
+          <div class="app-card">
+            <div class="app-card-label">Your Ritual Streak</div>
+            <div class="app-card-title">🔥 12 Days Strong</div>
+          </div>
+          <div class="app-card">
+            <div class="app-card-label">Sauna Available</div>
+            <div class="app-card-title">📅 Book for Tonight</div>
+          </div>
+          <div class="app-card">
+            <div class="app-card-label">Library</div>
+            <div class="app-card-title">📖 Reishi & Immunity</div>
+          </div>
+          <div class="app-nav">
+            <span class="app-nav-item">🏠</span>
+            <span class="app-nav-item">📅</span>
+            <span class="app-nav-item">🔥</span>
+            <span class="app-nav-item">👥</span>
+            <span class="app-nav-item">🪪</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10: ROADMAP -->
+<section id="roadmap" class="slide slide-dark">
+  <div class="ornament-num">10</div>
+  <div class="slide-inner">
+    <span class="slide-num">09 / ROADMAP</span>
+    <span class="section-label fade-in">From Idea to Institution</span>
+    <h2 class="fade-in delay-1">THE PATH<br>FORWARD.</h2>
+    <div class="divider fade-in delay-2"></div>
+
+    <div class="grid-4 fade-in delay-3" style="margin-top: 40px;">
+      <div class="card" style="border-left-color: var(--amber-dim);">
+        <div style="font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--amber); margin-bottom: 8px;">NOW</div>
+        <h3 style="font-size: 17px; color: var(--cream-dim);">Validation</h3>
+        <p style="font-size: 14px; margin-top: 8px;">Interview 20–30 target customers. Build landing page. Start waitlist. Begin location scouting. Develop brand identity.</p>
+        <br>
+        <span class="tag">0–3 months</span>
+      </div>
+      <div class="card">
+        <div style="font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--amber); margin-bottom: 8px;">PHASE 1</div>
+        <h3 style="font-size: 17px; color: var(--cream-dim);">Foundation</h3>
+        <p style="font-size: 14px; margin-top: 8px;">Secure location. Sign lease. Begin permitting. Launch Founders membership presale. Build app MVP (booking + profile).</p>
+        <br>
+        <span class="tag">3–12 months</span>
+      </div>
+      <div class="card">
+        <div style="font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--amber); margin-bottom: 8px;">PHASE 2</div>
+        <h3 style="font-size: 17px; color: var(--cream-dim);">Launch</h3>
+        <p style="font-size: 14px; margin-top: 8px;">Grand opening. 3 saunas + café live. Weekly programming begins. Target 100 members in first 3 months. SSC Podcast launches.</p>
+        <br>
+        <span class="tag">Month 12–18</span>
+      </div>
+      <div class="card" style="border-left-color: #3a7a4a;">
+        <div style="font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: #3a7a4a; margin-bottom: 8px;">PHASE 3</div>
+        <h3 style="font-size: 17px; color: var(--cream-dim);">Scale</h3>
+        <p style="font-size: 14px; margin-top: 8px;">300+ members. Full app with community layer. Corporate wellness packages. Explore second location or SSC digital membership product.</p>
+        <br>
+        <span class="tag">Month 18–36</span>
+      </div>
+    </div>
+
+    <hr class="amber" style="margin-top: 48px;">
+
+    <div class="two-col fade-in delay-4">
+      <div>
+        <h3>Key Risks & Mitigations</h3>
+        <ul class="numbered-list" style="margin-top: 16px;">
+          <li>
+            <span class="num-badge" style="color: #e05a3a;">!</span>
+            <p><strong>Location:</strong> Munich's real estate market is extremely competitive. Mitigate by starting the search immediately, targeting Werksviertel or Neuhausen as well as Schwabing, and being flexible on timing.</p>
+          </li>
+          <li>
+            <span class="num-badge" style="color: #e05a3a;">!</span>
+            <p><strong>Complexity:</strong> Running sauna + café + events is operationally demanding. Mitigate with a phased rollout — sauna and basic café first, full programming in month 2.</p>
+          </li>
+          <li>
+            <span class="num-badge" style="color: #e05a3a;">!</span>
+            <p><strong>Permitting:</strong> German regulatory requirements for sauna build-outs are significant. Mitigate by engaging a specialist architect and planning consultant from day one.</p>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3>Competitive Inspiration</h3>
+        <ul class="numbered-list" style="margin-top: 16px;">
+          <li>
+            <span class="num-badge">→</span>
+            <p><strong>Remedy Place</strong> (LA) — Community wellness club, closest reference globally</p>
+          </li>
+          <li>
+            <span class="num-badge">→</span>
+            <p><strong>The Well</strong> (NYC) — Members wellness concept with programming</p>
+          </li>
+          <li>
+            <span class="num-badge">→</span>
+            <p><strong>Lōdge</strong> (London) — Social sauna concept with strong brand</p>
+          </li>
+          <li>
+            <span class="num-badge">→</span>
+            <p><strong>Soho House</strong> — The gold standard for members-only lifestyle community</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 11: CLOSING -->
+<section class="slide slide-warm" style="text-align: center;">
+  <div class="steam-particle" style="left: 20%; bottom: 10%; animation-delay: 1s;"></div>
+  <div class="steam-particle" style="right: 15%; bottom: 5%; animation-delay: 4s;"></div>
+  <div class="slide-inner" style="display: flex; flex-direction: column; align-items: center;">
+    <span class="section-label fade-in">The Invitation</span>
+    <h1 class="fade-in delay-1" style="text-align: center;">COME IN<br>FROM THE<br><em>COLD.</em></h1>
+    <div class="divider fade-in delay-2" style="margin: 32px auto;"></div>
+    <p class="fade-in delay-3" style="max-width: 600px; font-size: 22px; text-align: center;">Munich is ready for a place that takes health seriously — not as a trend, but as a craft. Sauna Social Club will be that place.</p>
+    <br>
+    <p class="fade-in delay-4" style="max-width: 500px; font-size: 17px; text-align: center; color: var(--cream-dim);">First-mover advantage in an untapped category. Membership-first recurring revenue. A community that markets itself.</p>
+
+    <div class="fade-in delay-5" style="margin-top: 48px; display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;">
+      <div class="stat" style="min-width: 160px;">
+        <span class="stat-num">0</span>
+        <span class="stat-label">Direct Competitors</span>
+      </div>
+      <div class="stat" style="min-width: 160px;">
+        <span class="stat-num">€55K</span>
+        <span class="stat-label">Monthly Revenue Target</span>
+      </div>
+      <div class="stat" style="min-width: 160px;">
+        <span class="stat-num">300</span>
+        <span class="stat-label">Target Members</span>
+      </div>
+      <div class="stat" style="min-width: 160px;">
+        <span class="stat-num">52</span>
+        <span class="stat-label">Unique Weekly Themes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>SAUNA SOCIAL CLUB — MÜNCHEN</span>
+  <span>CONCEPT DECK — 2026</span>
+  <span>CONFIDENTIAL</span>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        entry.target.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    // Use animation delay from CSS class
+    const delay = el.classList.contains('delay-1') ? '0.1s' :
+                  el.classList.contains('delay-2') ? '0.25s' :
+                  el.classList.contains('delay-3') ? '0.4s' :
+                  el.classList.contains('delay-4') ? '0.55s' :
+                  el.classList.contains('delay-5') ? '0.7s' : '0s';
+    el.style.transitionDelay = delay;
+    observer.observe(el);
+  });
+
+  // Smooth active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 200;
+      if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === `#${current}` ? 'var(--amber-light)' : '';
+    });
+  });
+</script>
+
+</body>
+</html>
